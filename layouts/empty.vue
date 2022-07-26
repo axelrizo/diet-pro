@@ -1,5 +1,3 @@
 <template lang="pug">
-div
-  LayoutAlertContainer
-  Nuxt
+Nuxt
 </template>
