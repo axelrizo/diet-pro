@@ -1,14 +1,21 @@
 <template lang="pug">
-b-container
-  b-row
-    b-col(cols="12" lg="6")
-      PageIndexLoginForm
-    b-col(cols="12" lg="6")
-      PageIndexRegisterForm
+div
+  PageIndexLandingPage(v-if="!isLoggedTheUser")
+  PageIndexDashboard(v-else)
 </template>
 
 <script>
 export default {
-  layout: 'login'
+  layout (context) {
+    const isLoggedTheUser = context.store.state.user.isLogged
+    if (isLoggedTheUser === true) { return 'default' }
+    return 'landing'
+  },
+
+  computed: {
+    isLoggedTheUser () {
+      return this.$store.state.user.isLogged
+    }
+  }
 }
 </script>

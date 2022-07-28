@@ -1,25 +1,25 @@
 <template lang="pug">
-b-card.card.my-5.ml-lg-4.mx-auto
-  b-card-body
-    h3.mb-4 Sign up
-    b-form(ref="registerForm", @submit.prevent="onSubmit")
-      b-form-group(label="Email:")
-        b-form-input(type="email", required, v-model="form.email")
-      b-form-group(label="Password:")
-        b-form-input(
-          type="password",
-          required,
-          :state="passwordState",
-          v-model="form.password"
-        )
-      b-form-group(label="Confirm password:")
-        b-form-input(
-          type="password",
-          required,
-          :state="repitedPasswordState",
-          v-model="form.repitedPassword"
-        )
-      b-button(type="submit", variant="primary") Registrarme
+b-modal#signup(title="Sign Up" size="lg" centered hide-footer)
+  b-form(ref="registerForm", @submit.prevent="onSubmit")
+    b-form-group(label="Email:")
+      b-form-input(type="email", required, v-model="form.email")
+    b-form-group(label="Username:")
+      b-form-input(required, v-model="form.username")
+    b-form-group(label="Password:")
+      b-form-input(
+        type="password",
+        required,
+        :state="passwordState",
+        v-model="form.password"
+      )
+    b-form-group(label="Confirm password:")
+      b-form-input(
+        type="password",
+        required,
+        :state="repitedPasswordState",
+        v-model="form.repitedPassword"
+      )
+    b-button(type="submit", variant="primary") Sign up
 </template>
 
 <script>
@@ -31,7 +31,8 @@ export default {
       form: {
         email: '',
         password: '',
-        repitedPassword: ''
+        repitedPassword: '',
+        username: ''
       },
       repitedPasswordState: null,
       passwordState: null

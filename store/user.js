@@ -1,4 +1,4 @@
 export const state = () => ({
-  user: [],
-  isLogged: false
+  user: {},
+  isLogged: true
 })

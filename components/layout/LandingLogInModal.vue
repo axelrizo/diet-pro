@@ -1,13 +1,11 @@
 <template lang="pug">
-b-card.card.my-5.mr-lg-4.mx-auto
-  b-card-body
-    h3.mb-4 Log in
-    b-form(@submit.prevent="onSubmit")
-      b-form-group(label="Email:")
-        b-form-input(type="email", required, v-model="form.email")
-      b-form-group(label="Password:")
-        b-form-input(type="password", required, v-model="form.password")
-      b-button(type="submit", variant="primary") Iniciar sesión
+b-modal#login(title="Log In" size="lg" centered="" hide-footer)
+  b-form(@submit.prevent="onSubmit")
+    b-form-group(label="Email:")
+      b-form-input(type="email", required, v-model="form.email")
+    b-form-group(label="Password:")
+      b-form-input(type="password", required, v-model="form.password")
+    b-button(type="submit", variant="primary") Log in
 </template>
 
 <script>

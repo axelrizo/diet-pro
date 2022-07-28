@@ -1,7 +1,9 @@
 <template lang="pug">
 div.app
   LayoutAlertContainer
-  LayoutNavbar
+  LayoutLandingNavbar
+  LayoutLandingLogInModal
+  LayoutLandingSignUpModal
   Nuxt
 </template>
 
