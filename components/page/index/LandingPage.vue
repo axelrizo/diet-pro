@@ -10,7 +10,7 @@ b-container
         h4.text-center.d-md-none.d-block Do not suffer more by dieting.
         h4.text-center.d-none.d-md-block Do not suffer more by dieting, get organized and know the possibilities.
         div.text-center.mt-4
-          b-button(variant="success" size="lg") Sign up
+          b-button(variant="success" size="lg" v-b-modal.signup) Sign up
   b-container.my-5
     b-row.index__card
       b-col(cols="6")
@@ -40,7 +40,7 @@ b-container
       )
     h3.text-center.mb-4 What are you waiting to start
     .text-center
-      b-button(variant="success" size="lg") Sign up
+      b-button(variant="success" size="lg" v-b-modal.signup) Sign up
 </template>
 
 <style lang="scss" scoped>

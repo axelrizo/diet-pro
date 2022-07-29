@@ -23,7 +23,7 @@ b-modal#signup(title="Sign Up" size="lg" centered hide-footer)
 </template>
 
 <script>
-import { register } from '~/services/user.services'
+import { singup } from '~/services/auth.services'
 
 export default {
   data () {
@@ -71,14 +71,15 @@ export default {
       try {
         const dataToSend = {
           email: this.form.email,
-          password: this.form.password
+          password: this.form.password,
+          username: this.form.username
         }
 
         if (!this.passwordState || !this.repitedPasswordState) {
           throw new Error('Make sure that the both password are the same')
         }
 
-        const response = await register(dataToSend)
+        const response = await singup(dataToSend)
 
         if (response.status === 'error') {
           throw new Error(response.message)

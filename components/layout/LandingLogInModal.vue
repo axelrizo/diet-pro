@@ -9,7 +9,7 @@ b-modal#login(title="Log In" size="lg" centered="" hide-footer)
 </template>
 
 <script>
-import { login } from '@/services/user.services'
+import { login } from '~/services/auth.services'
 
 export default {
   data () {

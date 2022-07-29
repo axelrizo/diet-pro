@@ -1,6 +1,6 @@
 
-const register = async (form) => {
-  const url = `${process.env.END_POINT}/user`
+const singup = async (form) => {
+  const url = `${process.env.END_POINT}auth/signup`
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -13,7 +13,7 @@ const register = async (form) => {
 }
 
 const login = async (form) => {
-  const url = `${process.env.END_POINT}/user/login`
+  const url = `${process.env.END_POINT}auth/login`
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -26,6 +26,6 @@ const login = async (form) => {
 }
 
 export {
-  register,
+  singup,
   login
 }
