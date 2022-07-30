@@ -11,5 +11,5 @@ b-navbar(toggleable="lg" type="dark" variant="success")
         b-nav-item(href="#") Days
         b-nav-item(href="#") Dishes
         b-nav-item(href="#") Foods
-        b-nav-item(href="#") Log out
+        b-nav-item(@click="$auth.logout()") Log out
 </template>

@@ -1,5 +1,5 @@
 <template lang="pug">
-b-modal#login(title="Log In" size="lg" centered="" hide-footer)
+b-modal#loginModal(title="Log In", size="lg", centered="", hide-footer)
   b-form(@submit.prevent="onSubmit")
     b-form-group(label="Email:")
       b-form-input(type="email", required, v-model="form.email")
@@ -9,8 +9,6 @@ b-modal#login(title="Log In" size="lg" centered="" hide-footer)
 </template>
 
 <script>
-import { login } from '~/services/auth.services'
-
 export default {
   data () {
     return {
@@ -22,19 +20,19 @@ export default {
   },
 
   methods: {
-
     async onSubmit () {
       try {
-        const response = await login(this.form)
-        console.log(response)
+        const response = await this.$auth.loginWith('local', { data: this.form })
 
         if (response.status === 'error') {
-          throw new Error(response.message)
+          throw new Error(response.data.message)
         }
+
+        this.$bvModal.hide('loginModal')
 
         this.$store.dispatch('alert/add', {
           type: null,
-          message: response.message
+          message: response.data.message
         })
       } catch (error) {
         this.$store.dispatch('alert/add', {

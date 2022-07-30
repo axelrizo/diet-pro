@@ -1,5 +1,5 @@
 <template lang="pug">
-b-modal#signup(title="Sign Up" size="lg" centered hide-footer)
+b-modal#signupModal(title="Sign Up" size="lg" centered hide-footer)
   b-form(ref="registerForm", @submit.prevent="onSubmit")
     b-form-group(label="Email:")
       b-form-input(type="email", required, v-model="form.email")
@@ -85,9 +85,22 @@ export default {
           throw new Error(response.message)
         }
 
+        const responseLogin = await this.$auth.loginWith('local', { data: this.form })
+
+        if (responseLogin.status === 'error') {
+          throw new Error(response.data.message)
+        }
+
+        this.$bvModal.hide('signupModal')
+
         this.$store.dispatch('alert/add', {
           type: null,
           message: response.message
+        })
+
+        this.$store.dispatch('alert/add', {
+          type: null,
+          message: responseLogin.data.message
         })
       } catch (error) {
         this.$store.dispatch('alert/add', {
