@@ -19,7 +19,10 @@ b-modal#signupModal(title="Sign Up" size="lg" centered hide-footer)
         :state="repitedPasswordState",
         v-model="form.repitedPassword"
       )
-    b-button(type="submit", variant="primary") Sign up
+    b-button(type="submit", variant="primary").ml-auto.d-block Sign up
+  hr
+  p Already hace an account? #[b-link(@click="$bvModal.hide('signupModal')" v-b-modal.loginModal) Log in]
+
 </template>
 
 <script>
