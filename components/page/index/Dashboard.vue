@@ -1,5 +1,6 @@
 <template lang="pug">
 b-container.pt-5
+  PageIndexNewPersonModal
   h3 {USER1}
   b-form(inline).mt-4.mb-2
     label.mr-sm-2(for="inline-form-custom-select-pref") Upload last weight:
@@ -10,5 +11,5 @@ b-container.pt-5
   h1 {GRAPH}
   b-button More information
   div.mt-5
-    b-button Add other user
+    b-button(v-b-modal.newPersonModal) Add other user
 </template>
