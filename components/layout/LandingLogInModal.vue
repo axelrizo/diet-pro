@@ -5,9 +5,7 @@ b-modal#loginModal(title="Log In", size="lg", centered="", hide-footer)
       b-form-input(type="email", required, v-model="form.email")
     b-form-group(label="Password:")
       b-form-input(type="password", required, v-model="form.password")
-    b-button(type="submit", variant="primary").ml-auto.d-block Log in
-  hr
-  p Don’t have an account? Create an account #[b-link(@click="$bvModal.hide('loginModal')" v-b-modal.signupModal) Sign In]
+    b-button(type="submit", variant="primary") Log in
 </template>
 
 <script>
