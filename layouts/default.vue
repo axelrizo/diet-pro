@@ -1,8 +1,6 @@
 <template lang="pug">
 div.app
   LayoutAlertContainer
-  LayoutLandingLogInModal
-  LayoutLandingSignUpModal
   LayoutNavbar(v-if="$auth.loggedIn")
   LayoutLandingNavbar(v-else)
   Nuxt
