@@ -26,6 +26,8 @@ export default {
 
         this.$bvModal.hide('newPersonModal')
 
+        this.$emit('fetch')
+
         this.$store.dispatch('alert/add', {
           type: null,
           message: response.message
