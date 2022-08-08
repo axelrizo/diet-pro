@@ -14,7 +14,7 @@
     )
   div(v-else)
     h5 Don't have info to do graphs
-  b-button(size="lg", block) More information
+  b-button(size="lg", block, :to="`person/${person.idPerson}`") More information
 </template>
 
 <script>

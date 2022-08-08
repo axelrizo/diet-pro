@@ -24,10 +24,10 @@ export default {
         name: '{NAME}'
       },
       items: [
-        { date: 40, weight: 98, weight_lost: 0.2, average: 98, weight_lost_in_average: 0.2 },
-        { date: 21, weight: 97, weight_lost: 0.4, average: 98, weight_lost_in_average: 0.2 },
-        { date: 89, weight: 96, weight_lost: 0.8, average: 97, weight_lost_in_average: 0.2 },
-        { date: 38, weight: 95, weight_lost: 0.2, average: 97, weight_lost_in_average: 0.2 }
+        { date: '3-may-22', weight: 98, weight_lost: 0.2, average: 98, weight_lost_in_average: 0.2 },
+        { date: '3-may-22', weight: 97, weight_lost: 0.4, average: 98, weight_lost_in_average: 0.2 },
+        { date: '3-may-22', weight: 96, weight_lost: 0.8, average: 97, weight_lost_in_average: 0.2 },
+        { date: '3-may-22', weight: 95, weight_lost: 0.2, average: 97, weight_lost_in_average: 0.2 }
       ]
     }
   }

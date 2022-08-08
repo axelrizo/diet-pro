@@ -5,7 +5,7 @@ b-navbar(toggleable="lg" type="dark" variant="success")
     b-navbar-toggle(target="nav-collapse")
     b-collapse#nav-collapse(is-nav="")
       b-navbar-nav.ml-auto
-        b-nav-item(to="/") Users
+        b-nav-item(to="/") Persons
         b-nav-item(href="/plan/all") Plans
         b-nav-item(href="/day/all") Days
         b-nav-item(href="/meal/all") Meals
