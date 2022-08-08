@@ -8,7 +8,7 @@
   )
   div(v-if="person.chartData")
     h5.my-3 Last weight: {{ person.chartData.data.at(-1) }} kg | {{ person.chartData.labels.at(-1) }}
-    PageIndexDashboardPersonCardChart(
+    BaseLineChart(
       :data="person.chartData.data",
       :labels="person.chartData.labels"
     )
