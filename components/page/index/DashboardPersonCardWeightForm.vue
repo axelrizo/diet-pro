@@ -2,7 +2,7 @@
 b-form.mt-3.mb-2(inline, @submit.prevent="onSubmit()")
   label.mr-sm-2(for="upload-weight") Upload last weight:
   b-input-group.ml-sm-3.mt-2.mt-sm-0(append="kg")
-    b-form-input#upload-weight(type="number", v-model="form.weight")
+    b-form-input#upload-weight(type="number", step="0.1", v-model="form.weight")
   b-button.ml-sm-3.mt-2.mt-sm-0(
     v-if="canUpdateItsInfo",
     type="submit",
