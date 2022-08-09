@@ -26,16 +26,13 @@ const createNewPersonWeight = async (form, token) => {
 }
 
 const getAllPersons = async (idUser, firstDate, secondDate, token) => {
-  const dataInput = { idUser, firstDate, secondDate }
-
-  const url = `${process.env.END_POINT}person/all`
+  const url = `${process.env.END_POINT}person/all/${idUser}?firstDate=${firstDate}&secondDate=${secondDate}`
   const response = await fetch(url, {
-    method: 'POST',
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Authorization: token
-    },
-    body: JSON.stringify(dataInput)
+    }
   })
   return await response.json()
 }
