@@ -1,3 +1,4 @@
+// create
 
 const createNewPerson = async (form, token) => {
   const url = `${process.env.END_POINT}person`
@@ -25,8 +26,10 @@ const createNewPersonWeight = async (form, token) => {
   return await response.json()
 }
 
+// read
+
 const getAllPersons = async (idUser, firstDate, secondDate, token) => {
-  const url = `${process.env.END_POINT}person/all/${idUser}?firstDate=${firstDate}&secondDate=${secondDate}`
+  const url = `${process.env.END_POINT}person/all/?idUser=${idUser}&firstDate=${firstDate}&secondDate=${secondDate}`
   const response = await fetch(url, {
     method: 'GET',
     headers: {
@@ -36,6 +39,8 @@ const getAllPersons = async (idUser, firstDate, secondDate, token) => {
   })
   return await response.json()
 }
+
+// update
 
 const updatePersonWeight = async (form, token) => {
   const url = `${process.env.END_POINT}person/person-weight`
@@ -49,6 +54,8 @@ const updatePersonWeight = async (form, token) => {
   })
   return await response.json()
 }
+
+// delete
 
 export {
   createNewPerson,

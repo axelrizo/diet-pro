@@ -1,5 +1,5 @@
 
-const singup = async (form) => {
+const singUp = async (form) => {
   const url = `${process.env.END_POINT}auth/signup`
   const response = await fetch(url, {
     method: 'POST',
@@ -13,5 +13,5 @@ const singup = async (form) => {
 }
 
 export {
-  singup
+  singUp
 }

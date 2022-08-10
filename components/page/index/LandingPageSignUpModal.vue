@@ -26,7 +26,7 @@ b-modal#signupModal(title="Sign Up" size="lg" centered hide-footer)
 </template>
 
 <script>
-import { singup } from '~/services/auth.services'
+import { singUp } from '~/services/auth.services'
 
 export default {
   data () {
@@ -82,7 +82,7 @@ export default {
           throw new Error('Make sure that the both password are the same')
         }
 
-        const response = await singup(dataToSend)
+        const response = await singUp(dataToSend)
 
         if (response.status === 'error') {
           throw new Error(response.message)
