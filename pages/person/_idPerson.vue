@@ -28,21 +28,22 @@ export default {
         secondDate: ''
       },
       // backend needed info
-      user: {
-        name: 'AXEL1'
+      person: {
+        name: 'AXEL1',
+        chartData: {
+          labels: [
+            'Default',
+            'Default',
+            'Default',
+            'Default',
+            'Default',
+            'Default',
+            'Default'
+          ],
+          data: [10, 20, 30, 40, 50, 60, 70]
+        }
       },
-      chartData: {
-        labels: [
-          'Default',
-          'Default',
-          'Default',
-          'Default',
-          'Default',
-          'Default',
-          'Default'
-        ],
-        data: [10, 20, 30, 40, 50, 60, 70]
-      },
+      // make the table
       tableItems: [
         // with computed add weight_lost, average, weight_lost_with_average columns in the table
         { date: '3-may-22', weight: 98 },
