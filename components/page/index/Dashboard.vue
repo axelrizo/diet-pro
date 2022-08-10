@@ -11,8 +11,6 @@ b-container.pt-5
 </template>
 
 <script>
-import { getAllPersons } from '@/services/persons.services'
-
 export default {
   data () {
     return {
@@ -27,10 +25,7 @@ export default {
     today.setDate(today.getDate() - 60)
     const firstDate = today.toISOString().slice(0, 10)
 
-    const token = this.$auth.strategy.token.get()
-    const userId = this.$auth.user.idUser
-
-    const data = await getAllPersons(userId, firstDate, secondDate, token)
+    const data = await this.$personService.getAllPersons(firstDate, secondDate)
 
     // format date and know if we can update or create new weight
     const newFortmatedArray = data.data.persons.map((element) => {

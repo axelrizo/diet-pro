@@ -7,8 +7,6 @@ b-modal#newPersonModal(title="Add new person", size="lg", centered="", hide-foot
 </template>
 
 <script>
-import { createNewPerson } from '@/services/persons.services'
-
 export default {
   data () {
     return {
@@ -22,7 +20,7 @@ export default {
   methods: {
     async onSubmit () {
       try {
-        const response = await createNewPerson(this.form, this.$auth.strategy.token.get())
+        const response = await this.$personService.createPerson(this.form)
 
         this.$bvModal.hide('newPersonModal')
 

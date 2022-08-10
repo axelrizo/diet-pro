@@ -2,7 +2,11 @@
 b-form.mt-3.mb-2(inline, @submit.prevent="onSubmit()")
   label.mr-sm-2(for="upload-weight") Upload last weight:
   b-input-group.ml-sm-3.mt-2.mt-sm-0(append="kg")
-    b-form-input#upload-weight(type="number", step="0.1", v-model="form.weight")
+    b-form-input#upload-weight(
+      type="number",
+      step="0.1",
+      v-model="form.weight"
+    )
   b-button.ml-sm-3.mt-2.mt-sm-0(
     v-if="canUpdateItsInfo",
     type="submit",
@@ -12,11 +16,6 @@ b-form.mt-3.mb-2(inline, @submit.prevent="onSubmit()")
 </template>
 
 <script>
-import {
-  createNewPersonWeight,
-  updatePersonWeight
-} from '@/services/persons.services'
-
 export default {
   props: {
     idPerson: {
@@ -65,10 +64,7 @@ export default {
       try {
         this.form.date = this.computedDate
 
-        const response = await updatePersonWeight(
-          this.form,
-          this.$auth.strategy.token.get()
-        )
+        const response = await this.$personService.updatePersonWeight(this.form)
 
         this.$store.dispatch('alert/add', {
           type: null,
@@ -86,10 +82,7 @@ export default {
       try {
         this.form.date = this.computedDate
 
-        const response = await createNewPersonWeight(
-          this.form,
-          this.$auth.strategy.token.get()
-        )
+        const response = await this.$personService.createPersonWeight(this.form)
 
         this.$store.dispatch('alert/add', {
           type: null,
