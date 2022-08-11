@@ -1,5 +1,6 @@
 <template lang="pug">
 b-form(@submit.prevent="onSubmit")
+  //- name
   b-form-group(
     label-cols="5",
     label-cols-lg="2",
@@ -7,7 +8,8 @@ b-form(@submit.prevent="onSubmit")
     label-for="foodName"
   )
     b-input-group
-      b-form-input#foodName(v-model="form.foodName")
+      b-form-input#foodName(v-model="form.name")
+  //- quantity
   b-form-group(
     label-cols="5",
     label-cols-lg="2",
@@ -18,9 +20,10 @@ b-form(@submit.prevent="onSubmit")
     b-input-group(append="gr")
       b-form-input#foodQuantity(
         type="number",
-        v-model="form.foodQuantity",
+        v-model="quantity",
         readonly
       )
+  //- carbohydrates
   b-form-group(
     label-cols="5",
     label-cols-lg="2",
@@ -31,8 +34,9 @@ b-form(@submit.prevent="onSubmit")
       b-form-input#foodCarbohydrates(
         type="number",
         step="0.1",
-        v-model="form.foodCarbohydrates"
+        v-model="form.carbohydrates"
       )
+  //- protein
   b-form-group(
     label-cols="5",
     label-cols-lg="2",
@@ -43,8 +47,9 @@ b-form(@submit.prevent="onSubmit")
       b-form-input#foodProtein(
         type="number",
         step="0.1",
-        v-model="form.foodProtein"
+        v-model="form.protein"
       )
+  //- fat
   b-form-group(
     label-cols="5",
     label-cols-lg="2",
@@ -52,7 +57,8 @@ b-form(@submit.prevent="onSubmit")
     label-for="foodFat"
   )
     b-input-group(append="gr")
-      b-form-input#foodFat(type="number", step="0.1", v-model="form.foodFat")
+      b-form-input#foodFat(type="number", step="0.1", v-model="form.fat")
+  //- calories
   b-form-group(
     label-cols="5",
     label-cols-lg="2",
@@ -95,21 +101,21 @@ export default {
   data () {
     return {
       form: {
-        foodName: this.foodData.foodName,
-        foodQuantity: this.foodData.foodQuantity,
-        foodCarbohydrates: this.foodData.foodCarbohydrates,
-        foodProtein: this.foodData.foodProtein,
-        foodFat: this.foodData.foodFat
-      }
+        name: this.foodData.foodName,
+        carbohydrates: this.foodData.foodCarbohydrates,
+        protein: this.foodData.foodProtein,
+        fat: this.foodData.foodFat
+      },
+      quantity: this.foodData.foodQuantity
     }
   },
 
   computed: {
     foodCalories () {
       return calculateCalories(
-        this.form.foodCarbohydrates,
-        this.form.foodProtein,
-        this.form.foodFat
+        this.form.carbohydrates,
+        this.form.protein,
+        this.form.fat
       )
     }
   },

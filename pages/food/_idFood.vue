@@ -1,6 +1,6 @@
 <template lang="pug">
 b-container.py-5
-  PageFoodFoodNameNewFoodMeasureModal
+  PageFoodFoodNameCreateFoodMeasureModal
   BaseFoodForm(:foodData="foodData" @onSubmitFoodForm="onSubmit" )
   PageFoodFoodNameMeasuresTable.mt-4
   b-button(variant="success", v-b-modal.newFoodMeasureModal block size="lg").mt-4 Add new measure

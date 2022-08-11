@@ -1,6 +1,6 @@
 <template lang="pug">
 b-container.pt-5
-  PageFoodFoodNameNewFoodModal
+  PageFoodFoodNameCreateFoodModal
   b-form.mt-5.d-flex
     b-form-input.w-100(placeholder="Search")
     b-button.ml-2(variant="success", type="submit") Search
