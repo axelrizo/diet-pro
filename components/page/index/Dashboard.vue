@@ -4,7 +4,8 @@ b-container.pt-5
   PageIndexDashboardPersonCard(
     v-for="(person, index) in persons",
     :key="index",
-    :person="person"
+    :person="person",
+    @fetch="$fetch"
   )
   .mt-5
     b-button(v-b-modal.newPersonModal variant="success" size="lg" block) Add an user

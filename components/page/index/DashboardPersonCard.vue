@@ -5,6 +5,7 @@
     :idPerson="person.idPerson",
     :canUpdateItsInfo="person.canUpdateItsInfo",
     :lastWeight="person.chartData ? person.chartData.data.at(-1) : 0"
+    @fetch="$emit('fetch')"
   )
   div(v-if="person.chartData")
     h5.my-3 Last weight: {{ person.chartData.data.at(-1) }} kg | {{ person.chartData.labels.at(-1) }}

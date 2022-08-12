@@ -66,6 +66,8 @@ export default {
 
         const response = await this.$personService.updatePersonWeight(this.form)
 
+        this.$emit('fetch')
+
         this.$store.dispatch('alert/add', {
           type: null,
           message: response.message
@@ -83,6 +85,8 @@ export default {
         this.form.date = this.computedDate
 
         const response = await this.$personService.createPersonWeight(this.form)
+
+        this.$emit('fetch')
 
         this.$store.dispatch('alert/add', {
           type: null,
