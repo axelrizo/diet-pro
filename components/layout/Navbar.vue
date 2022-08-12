@@ -6,6 +6,7 @@ b-navbar(toggleable="lg" type="dark" variant="success")
     b-collapse#nav-collapse(is-nav="")
       b-navbar-nav.ml-auto
         b-nav-item(to="/") Persons
+        b-nav-item(to="/shopping-list") Shopping List
         b-nav-item(to="/plan/all") Plans
         b-nav-item(to="/day/all") Days
         b-nav-item(to="/meal/all") Meals
