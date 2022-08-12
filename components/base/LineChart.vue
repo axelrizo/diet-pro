@@ -2,7 +2,7 @@
   <client-only>
     <LineChart
       :chart-options="chartOptions"
-      :chart-data="chartData"
+      :chart-data="computedChartData"
       :chart-id="chartId"
       :dataset-id-key="datasetIdKey"
       :plugins="plugins"
@@ -78,9 +78,19 @@ export default {
       default: () => []
     }
   },
+
   data () {
     return {
-      chartData: {
+      chartOptions: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    }
+  },
+
+  computed: {
+    computedChartData () {
+      return {
         labels: this.labels,
         datasets: [
           {
@@ -89,10 +99,6 @@ export default {
             data: this.data
           }
         ]
-      },
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: false
       }
     }
   }

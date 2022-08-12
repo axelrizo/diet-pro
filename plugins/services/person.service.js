@@ -21,6 +21,15 @@ export default function ($axios, app) {
         }
       )
     },
+
+    async getPerson (idPerson, firstDate, secondDate) {
+      return await $axios.$get('/person/person-weight',
+        {
+          params: { idPerson, firstDate, secondDate },
+          headers: { Authorization: app.$auth.strategy.token.get() }
+        }
+      )
+    },
     // update
     async updatePersonWeight (form) {
       return await $axios.$put('/person/person-weight', form,
