@@ -35,6 +35,14 @@ export default function ($axios, app) {
       return await $axios.$put('/person/person-weight', form,
         { headers: { Authorization: app.$auth.strategy.token.get() } }
       )
+    },
+
+    async updatePersonName (form) {
+      form.idUser = app.$auth.user.idUser
+
+      return await $axios.$put('/person', form,
+        { headers: { Authorization: app.$auth.strategy.token.get() } }
+      )
     }
     // delete
   }

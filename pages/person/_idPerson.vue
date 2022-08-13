@@ -1,8 +1,9 @@
 <template lang="pug">
 b-container
-  b-form.mt-4.mb-2(inline)
+  b-form.mt-4.mb-2(inline @submit.prevent="onSubmit()")
     label.mr-sm-2(for="name") Name:
-    b-input#name(type="text", v-model="person.name")
+    b-input#name(type="text", v-model="form.name")
+    b-input#name(type="text", v-model="form.idPerson" hidden)
     b-button.ml-sm-3.mt-2.mt-sm-0(type="submit") Save
   BaseLineChart(
     ref="idPersonChart",
@@ -49,11 +50,16 @@ export default {
 
     const person = response.data.person
 
+    const form = {
+      idPerson: person.idPerson,
+      name: person.name
+    }
+
     person.chartData.labels = person.chartData.labels.map(dateLabel =>
       formatFriendlyToShow(new Date(dateLabel))
     )
 
-    return { dates, person }
+    return { dates, person, form }
   },
 
   data () {
@@ -123,7 +129,26 @@ export default {
           formatFriendlyToShow(new Date(dateLabel))
         )
 
+        this.form.idPerson = person.idPerson
+        this.form.name = person.name
+
         this.person = person
+      } catch (error) {
+        this.$store.dispatch('alert/add', {
+          type: 'error',
+          message: error.message
+        })
+      }
+    },
+
+    async onSubmit () {
+      try {
+        const response = await this.$personService.updatePersonName(this.form)
+
+        this.$store.dispatch('alert/add', {
+          type: null,
+          message: response.message
+        })
       } catch (error) {
         this.$store.dispatch('alert/add', {
           type: 'error',
