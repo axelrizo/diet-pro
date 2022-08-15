@@ -1,9 +1,9 @@
 <template lang="pug">
 b-container
-  b-form.mt-4.mb-2(inline @submit.prevent="onSubmit()")
+  b-form.mt-4.mb-2(inline, @submit.prevent="onSubmit()")
     label.mr-sm-2(for="name") Name:
     b-input#name(type="text", v-model="form.name")
-    b-input#name(type="text", v-model="form.idPerson" hidden)
+    b-input#name(type="text", v-model="form.idPerson", hidden)
     b-button.ml-sm-3.mt-2.mt-sm-0(type="submit") Save
   BaseLineChart(
     ref="idPersonChart",
@@ -19,7 +19,7 @@ b-container
   b-form.mt-4.mb-2(inline)
     label.mr-sm-2(for="average") Average in:
     b-input-group(append="days")
-      b-form-input#average(type="number", v-model="average" min="1")
+      b-form-input#average(type="number", v-model="average", min="1")
   b-table(:items="computedTableItems", striped, hover, responsive)
 </template>
 
@@ -29,37 +29,48 @@ import {
   formatFriendlyToShow,
   subtractDaysFromDate
 } from '@/helpers/handleDates'
+import { mixinHandleNotification } from '@/mixins/handleNotification'
 
 export default {
+  mixins: [mixinHandleNotification],
+
   async asyncData (context) {
-    const DEFAULT_DAYS_TO_SHOW = 60
-    const today = new Date()
+    try {
+      const DEFAULT_DAYS_TO_SHOW = 60
+      const today = new Date()
 
-    const dates = {
-      firstDate: formatToConsultApi(
-        subtractDaysFromDate(today, DEFAULT_DAYS_TO_SHOW)
-      ),
-      secondDate: formatToConsultApi(today)
+      const dates = {
+        firstDate: formatToConsultApi(
+          subtractDaysFromDate(today, DEFAULT_DAYS_TO_SHOW)
+        ),
+        secondDate: formatToConsultApi(today)
+      }
+
+      const response = await context.$personService
+        .getPerson(
+          context.route.params.idPerson,
+          dates.firstDate,
+          dates.secondDate
+        )
+        .catch(({ response }) => {
+          throw new Error(response.data.message)
+        })
+
+      const person = response.data.person
+
+      const form = {
+        idPerson: person.idPerson,
+        name: person.name
+      }
+
+      person.chartData.labels = person.chartData.labels.map(dateLabel =>
+        formatFriendlyToShow(new Date(dateLabel))
+      )
+
+      return { dates, person, form }
+    } catch (error) {
+      context.mixinHandleNotificationErrorNotification(error)
     }
-
-    const response = await context.$personService.getPerson(
-      context.route.params.idPerson,
-      dates.firstDate,
-      dates.secondDate
-    )
-
-    const person = response.data.person
-
-    const form = {
-      idPerson: person.idPerson,
-      name: person.name
-    }
-
-    person.chartData.labels = person.chartData.labels.map(dateLabel =>
-      formatFriendlyToShow(new Date(dateLabel))
-    )
-
-    return { dates, person, form }
   },
 
   data () {
@@ -74,41 +85,49 @@ export default {
       const personChartLabels = this.person.chartData.labels
       const firstWeight = personChartData[0]
 
-      const arrayWeightLostAndAverage = personChartLabels.map((label, index) => {
-        // weight lost
-        let totalWeightLost = null
+      const arrayWeightLostAndAverage = personChartLabels.map(
+        (label, index) => {
+          // weight lost
+          let totalWeightLost = null
 
-        if (index > 0) {
-          totalWeightLost = (firstWeight - personChartData[index]).toFixed(1)
+          if (index > 0) {
+            totalWeightLost = (firstWeight - personChartData[index]).toFixed(1)
+          }
+
+          // average weight
+          const GAP_BETWEEN_THE_INDEX_AND_THE_AVERAGE = 1
+          const NEED_MORE_THAN_0_IN_AVERAGE_OR_CRASH = this.average > 0
+          const normalizedIndex = index + GAP_BETWEEN_THE_INDEX_AND_THE_AVERAGE
+          let averageWeight = null
+
+          if (
+            normalizedIndex >= this.average &&
+            NEED_MORE_THAN_0_IN_AVERAGE_OR_CRASH
+          ) {
+            const initialPartOfTheArray =
+              normalizedIndex - parseInt(this.average)
+            const endPartOfTheArray = normalizedIndex
+
+            const slicedArray = personChartData.slice(
+              initialPartOfTheArray,
+              endPartOfTheArray
+            )
+
+            averageWeight = slicedArray.reduce(
+              (accumulator, current) => accumulator + current
+            )
+            averageWeight /= this.average
+            averageWeight = averageWeight.toFixed(1)
+          }
+
+          return {
+            date: label,
+            weight: personChartData[index],
+            averageWeight,
+            totalWeightLost
+          }
         }
-
-        // average weight
-        const GAP_BETWEEN_THE_INDEX_AND_THE_AVERAGE = 1
-        const NEED_MORE_THAN_0_IN_AVERAGE_OR_CRASH = this.average > 0
-        const normalizedIndex = index + GAP_BETWEEN_THE_INDEX_AND_THE_AVERAGE
-        let averageWeight = null
-
-        if (normalizedIndex >= this.average && NEED_MORE_THAN_0_IN_AVERAGE_OR_CRASH) {
-          const initialPartOfTheArray = normalizedIndex - parseInt(this.average)
-          const endPartOfTheArray = normalizedIndex
-
-          const slicedArray = personChartData.slice(
-            initialPartOfTheArray,
-            endPartOfTheArray
-          )
-
-          averageWeight = slicedArray.reduce((accumulator, current) => accumulator + current)
-          averageWeight /= this.average
-          averageWeight = averageWeight.toFixed(1)
-        }
-
-        return {
-          date: label,
-          weight: personChartData[index],
-          averageWeight,
-          totalWeightLost
-        }
-      })
+      )
 
       return arrayWeightLostAndAverage
     }
@@ -117,11 +136,15 @@ export default {
   methods: {
     async fetchInfo () {
       try {
-        const response = await this.$personService.getPerson(
-          this.$route.params.idPerson,
-          this.dates.firstDate,
-          this.dates.secondDate
-        )
+        const response = await this.$personService
+          .getPerson(
+            this.$route.params.idPerson,
+            this.dates.firstDate,
+            this.dates.secondDate
+          )
+          .catch(({ response }) => {
+            throw new Error(response.data.message)
+          })
 
         const person = response.data.person
 
@@ -134,26 +157,21 @@ export default {
 
         this.person = person
       } catch (error) {
-        this.$store.dispatch('alert/add', {
-          type: 'error',
-          message: error.message
-        })
+        this.mixinHandleNotificationErrorNotification(error)
       }
     },
 
     async onSubmit () {
       try {
-        const response = await this.$personService.updatePersonName(this.form)
+        const response = await this.$personService
+          .updatePersonName(this.form)
+          .catch(({ response }) => {
+            throw new Error(response.data.message)
+          })
 
-        this.$store.dispatch('alert/add', {
-          type: null,
-          message: response.message
-        })
+        this.mixinHandleNotificationSuccessNotification(response.message)
       } catch (error) {
-        this.$store.dispatch('alert/add', {
-          type: 'error',
-          message: error.message
-        })
+        this.mixinHandleNotificationErrorNotification(error)
       }
     }
   }

@@ -1,13 +1,22 @@
 <template lang="pug">
-b-modal#newPersonModal(title="Add new person", size="lg", centered="", hide-footer)
+b-modal#newPersonModal(
+  title="Add new person",
+  size="lg",
+  centered="",
+  hide-footer
+)
   b-form(@submit.prevent="onSubmit")
     b-form-group(label="Name:")
       b-form-input(type="text", required, v-model="form.name")
-    b-button(type="submit", variant="primary").d-block.ml-auto Save
+    b-button.d-block.ml-auto(type="submit", variant="primary") Save
 </template>
 
 <script>
+import { mixinHandleNotification } from '@/mixins/handleNotification'
+
 export default {
+  mixins: [mixinHandleNotification],
+
   data () {
     return {
       form: {
@@ -20,21 +29,19 @@ export default {
   methods: {
     async onSubmit () {
       try {
-        const response = await this.$personService.createPerson(this.form)
+        const response = await this.$personService
+          .createPerson(this.form)
+          .catch(({ response }) => {
+            throw new Error(response.data.message)
+          })
 
         this.$bvModal.hide('newPersonModal')
 
         this.$emit('fetch')
 
-        this.$store.dispatch('alert/add', {
-          type: null,
-          message: response.message
-        })
+        this.mixinHandleNotificationSuccessNotification(response.data.message)
       } catch (error) {
-        this.$store.dispatch('alert/add', {
-          type: 'error',
-          message: error.message
-        })
+        this.mixinHandleNotificationErrorNotification(error)
       }
     }
   }

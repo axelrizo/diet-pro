@@ -16,7 +16,11 @@ b-form.mt-3.mb-2(inline, @submit.prevent="onSubmit()")
 </template>
 
 <script>
+import { mixinHandleNotification } from '@/mixins/handleNotification'
+
 export default {
+  mixins: [mixinHandleNotification],
+
   props: {
     idPerson: {
       type: Number,
@@ -64,19 +68,17 @@ export default {
       try {
         this.form.date = this.computedDate
 
-        const response = await this.$personService.updatePersonWeight(this.form)
+        const response = await this.$personService
+          .updatePersonWeight(this.form)
+          .catch(({ response }) => {
+            throw new Error(response.data.message)
+          })
 
         this.$emit('fetch')
 
-        this.$store.dispatch('alert/add', {
-          type: null,
-          message: response.message
-        })
+        this.mixinHandleNotificationSuccessNotification(response.data.message)
       } catch (error) {
-        this.$store.dispatch('alert/add', {
-          type: 'error',
-          message: error.message
-        })
+        this.mixinHandleNotificationErrorNotification(error)
       }
     },
 
@@ -84,19 +86,18 @@ export default {
       try {
         this.form.date = this.computedDate
 
-        const response = await this.$personService.createPersonWeight(this.form)
+        const response = await this.$personService
+          .createPersonWeight(this.form)
+          .catch(({ response }) => {
+            console.log(response)
+            throw new Error(response.data.message)
+          })
 
         this.$emit('fetch')
 
-        this.$store.dispatch('alert/add', {
-          type: null,
-          message: response.message
-        })
+        this.mixinHandleNotificationSuccessNotification(response.data.message)
       } catch (error) {
-        this.$store.dispatch('alert/add', {
-          type: 'error',
-          message: error.message
-        })
+        this.mixinHandleNotificationErrorNotification(error)
       }
     }
   }

@@ -5,13 +5,17 @@ b-modal#loginModal(title="Log In", size="lg", centered="", hide-footer)
       b-form-input(type="email", required, v-model="form.email")
     b-form-group(label="Password:")
       b-form-input(type="password", required, v-model="form.password")
-    b-button(type="submit", variant="primary").ml-auto.d-block Log in
+    b-button.ml-auto.d-block(type="submit", variant="primary") Log in
   hr
-  p Don’t have an account? Create an account #[b-link(@click="$bvModal.hide('loginModal')" v-b-modal.signupModal) Sign In]
+  p Don’t have an account? Create an account #[b-link(@click="$bvModal.hide('loginModal')", v-b-modal.signupModal) Sign In]
 </template>
 
 <script>
+import { mixinHandleNotification } from '@/mixins/handleNotification'
+
 export default {
+  mixins: [mixinHandleNotification],
+
   data () {
     return {
       form: {
@@ -24,23 +28,19 @@ export default {
   methods: {
     async onSubmit () {
       try {
-        const response = await this.$auth.loginWith('local', { data: this.form })
-
-        if (response.status === 'error') {
-          throw new Error(response.data.message)
-        }
+        const response = await this.$auth
+          .loginWith('local', {
+            data: this.form
+          })
+          .catch(({ response }) => {
+            throw new Error(response.data.message)
+          })
 
         this.$bvModal.hide('loginModal')
 
-        this.$store.dispatch('alert/add', {
-          type: null,
-          message: response.data.message
-        })
+        this.mixinHandleNotificationSuccessNotification(response.data.message)
       } catch (error) {
-        this.$store.dispatch('alert/add', {
-          type: 'error',
-          message: error.message
-        })
+        this.mixinHandleNotificationErrorNotification(error)
       }
     }
   }

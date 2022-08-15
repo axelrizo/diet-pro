@@ -1,5 +1,5 @@
 <template lang="pug">
-b-modal#signupModal(title="Sign Up" size="lg" centered hide-footer)
+b-modal#signupModal(title="Sign Up", size="lg", centered, hide-footer)
   b-form(ref="registerForm", @submit.prevent="onSubmit")
     b-form-group(label="Email:")
       b-form-input(type="email", required, v-model="form.email")
@@ -16,26 +16,29 @@ b-modal#signupModal(title="Sign Up" size="lg" centered hide-footer)
       b-form-input(
         type="password",
         required,
-        :state="repitedPasswordState",
-        v-model="form.repitedPassword"
+        :state="repeatedPasswordState",
+        v-model="form.repeatedPassword"
       )
-    b-button(type="submit", variant="primary").ml-auto.d-block Sign up
+    b-button.ml-auto.d-block(type="submit", variant="primary") Sign up
   hr
-  p Already hace an account? #[b-link(@click="$bvModal.hide('signupModal')" v-b-modal.loginModal) Log in]
-
+  p Already have an account? #[b-link(@click="$bvModal.hide('signupModal')", v-b-modal.loginModal) Log in]
 </template>
 
 <script>
+import { mixinHandleNotification } from '@/mixins/handleNotification'
+
 export default {
+  mixins: [mixinHandleNotification],
+
   data () {
     return {
       form: {
         email: '',
         password: '',
-        repitedPassword: '',
+        repeatedPassword: '',
         username: ''
       },
-      repitedPasswordState: null,
+      repeatedPasswordState: null,
       passwordState: null
     }
   },
@@ -44,7 +47,7 @@ export default {
     'form.password' (newForm, oldForm) {
       this.onWritePassword()
     },
-    'form.repitedPassword' (newForm, oldForm) {
+    'form.repeatedPassword' (newForm, oldForm) {
       this.onWritePassword()
     }
   },
@@ -59,12 +62,12 @@ export default {
         this.passwordState = false
       }
 
-      if (this.form.repitedPassword.length === 0) {
-        this.repitedPasswordState = null
-      } else if (this.form.password === this.form.repitedPassword) {
-        this.repitedPasswordState = true
+      if (this.form.repeatedPassword.length === 0) {
+        this.repeatedPasswordState = null
+      } else if (this.form.password === this.form.repeatedPassword) {
+        this.repeatedPasswordState = true
       } else {
-        this.repitedPasswordState = false
+        this.repeatedPasswordState = false
       }
     },
 
@@ -76,38 +79,30 @@ export default {
           username: this.form.username
         }
 
-        if (!this.passwordState || !this.repitedPasswordState) {
+        if (!this.passwordState || !this.repeatedPasswordState) {
           throw new Error('Make sure that the both password are the same')
         }
 
-        const response = await this.$authService.singUp(dataToSend)
+        const response = await this.$authService
+          .singUp(dataToSend)
+          .catch(({ response }) => {
+            throw new Error(response.data.message)
+          })
 
-        if (response.status === 'error') {
-          throw new Error(response.message)
-        }
-
-        const responseLogin = await this.$auth.loginWith('local', { data: this.form })
-
-        if (responseLogin.status === 'error') {
-          throw new Error(response.data.message)
-        }
+        const responseLogin = await this.$auth
+          .loginWith('local', {
+            data: this.form
+          })
+          .catch(({ response }) => {
+            throw new Error(response.data.message)
+          })
 
         this.$bvModal.hide('signupModal')
 
-        this.$store.dispatch('alert/add', {
-          type: null,
-          message: response.message
-        })
-
-        this.$store.dispatch('alert/add', {
-          type: null,
-          message: responseLogin.data.message
-        })
+        this.mixinHandleNotificationSuccessNotification(response.data.message)
+        this.mixinHandleNotificationSuccessNotification(responseLogin.data.message)
       } catch (error) {
-        this.$store.dispatch('alert/add', {
-          type: 'error',
-          message: error.message
-        })
+        this.mixinHandleNotificationErrorNotification(error)
       }
     }
   }
