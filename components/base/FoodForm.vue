@@ -81,7 +81,7 @@ export default {
   props: {
     foodData: {
       type: Object,
-      default: () => {
+      default () {
         return {
           foodName: '',
           foodQuantity: 100,

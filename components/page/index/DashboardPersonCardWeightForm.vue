@@ -89,7 +89,6 @@ export default {
         const response = await this.$personService
           .createPersonWeight(this.form)
           .catch(({ response }) => {
-            console.log(response)
             throw new Error(response.data.message)
           })
 

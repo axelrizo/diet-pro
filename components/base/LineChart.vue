@@ -63,19 +63,19 @@ export default {
     },
     styles: {
       type: Object,
-      default: () => {}
+      default () { return {} }
     },
     plugins: {
-      type: Object,
-      default: () => {}
+      type: Array,
+      default () { return [] }
     },
     data: {
       type: Array,
-      default: () => []
+      default () { return [] }
     },
     labels: {
       type: Array,
-      default: () => []
+      default () { return [] }
     }
   },
 
