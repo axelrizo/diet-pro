@@ -43,7 +43,7 @@ export default {
   props: {
     chartId: {
       type: String,
-      default: 'bar-chart'
+      default: 'line-chart'
     },
     datasetIdKey: {
       type: String,
@@ -94,8 +94,8 @@ export default {
         labels: this.labels,
         datasets: [
           {
-            label: 'Data One',
-            backgroundColor: '#f87979',
+            label: 'Weight',
+            backgroundColor: ['#28a745'],
             data: this.data
           }
         ]

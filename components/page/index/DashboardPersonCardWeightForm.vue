@@ -16,6 +16,7 @@ b-form.mt-3.mb-2(inline, @submit.prevent="onSubmit()")
 </template>
 
 <script>
+import { formatToConsultApi } from '@/helpers/handleDates'
 import { mixinHandleNotification } from '@/mixins/handleNotification'
 
 export default {
@@ -46,27 +47,15 @@ export default {
     }
   },
 
-  computed: {
-    computedDate () {
-      const currentJSDate = new Date()
-      const day = currentJSDate.getDate()
-      const month = currentJSDate.getMonth() + 1
-      const year = currentJSDate.getFullYear()
-      return `${year}-${month}-${day}`
-    }
-  },
-
   methods: {
     onSubmit () {
-      if (this.canUpdateItsInfo) {
-        return this.createRegister()
-      }
+      if (this.canUpdateItsInfo) { return this.createRegister() }
       return this.updateRegister()
     },
 
     async updateRegister () {
       try {
-        this.form.date = this.computedDate
+        this.form.date = formatToConsultApi(new Date())
 
         const response = await this.$personService
           .updatePersonWeight(this.form)
@@ -76,7 +65,7 @@ export default {
 
         this.$emit('fetch')
 
-        this.mixinHandleNotificationSuccessNotification(response.data.message)
+        this.mixinHandleNotificationSuccessNotification(response.message)
       } catch (error) {
         this.mixinHandleNotificationErrorNotification(error)
       }
@@ -84,7 +73,7 @@ export default {
 
     async createRegister () {
       try {
-        this.form.date = this.computedDate
+        this.form.date = formatToConsultApi(new Date())
 
         const response = await this.$personService
           .createPersonWeight(this.form)
@@ -94,7 +83,7 @@ export default {
 
         this.$emit('fetch')
 
-        this.mixinHandleNotificationSuccessNotification(response.data.message)
+        this.mixinHandleNotificationSuccessNotification(response.message)
       } catch (error) {
         this.mixinHandleNotificationErrorNotification(error)
       }
