@@ -8,10 +8,16 @@ b-container.pt-5
     @fetch="$fetch"
   )
   .mt-5
-    b-button(v-b-modal.newPersonModal variant="success" size="lg" block) Add an user
+    b-button(v-b-modal.newPersonModal, variant="success", size="lg", block) Add an user
 </template>
 
 <script>
+import {
+  formatToConsultApi,
+  formatFriendlyToShow,
+  subtractDaysFromDate
+} from '@/helpers/handleDates'
+
 export default {
   data () {
     return {
@@ -20,40 +26,32 @@ export default {
   },
 
   async fetch () {
+    const DEFAULT_DAYS_TO_SHOW = 60
     const today = new Date()
-
-    const secondDate = today.toISOString().slice(0, 10)
-    today.setDate(today.getDate() - 60)
-    const firstDate = today.toISOString().slice(0, 10)
+    const firstDate = formatToConsultApi(
+      subtractDaysFromDate(today, DEFAULT_DAYS_TO_SHOW)
+    )
+    const secondDate = formatToConsultApi(today)
 
     const data = await this.$personService.getAllPersons(firstDate, secondDate)
 
     // format date and know if we can update or create new weight
-    const newFortmatedArray = data.data.persons.map((element) => {
+    this.persons = data.data.persons.map((element) => {
       element.canUpdateItsInfo = true
       if (element.chartData) {
         // know if we can edit this date or not by comparing dates
-        const serverDate = new Date(element.chartData.labels.at(-1))
-        const currentJSDate = new Date()
-        if (serverDate.toLocaleDateString('en-US') === currentJSDate.toLocaleDateString('en-US')) {
-          element.canUpdateItsInfo = false
-        } else {
-          element.canUpdateItsInfo = true
-        }
+        const serverLastDate = new Date(element.chartData.labels.at(-1)).toLocaleDateString('en-US')
+        const currentJSDate = new Date().toLocaleDateString('en-US')
+
+        element.canUpdateItsInfo = serverLastDate !== currentJSDate
         // iterate each label and change format
-        const newDates = element.chartData.labels.map((date) => {
-          const jsDate = new Date(date)
-          const dateConfig = { month: 'short', day: 'numeric' }
-          const newDate = jsDate.toLocaleDateString('en-US', dateConfig)
-          return newDate
+        element.chartData.labels = element.chartData.labels.map((date) => {
+          return formatFriendlyToShow(new Date(date))
         })
-        element.chartData.labels = newDates
         return element
       }
       return element
     })
-
-    this.persons = newFortmatedArray
   }
 }
 </script>
