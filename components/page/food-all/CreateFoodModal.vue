@@ -15,12 +15,12 @@ export default {
         const response = await this.$foodService
           .createFood(form)
           .catch(({ response }) => {
-            throw new Error(response.data.message)
+            throw new Error(response.message)
           })
 
         this.$bvModal.hide('createFoodModal')
 
-        this.mixinHandleNotificationSuccessNotification(response.data.message)
+        this.mixinHandleNotificationSuccessNotification(response.message)
       } catch (error) {
         this.mixinHandleNotificationErrorNotification(error)
       }
