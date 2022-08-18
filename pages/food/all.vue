@@ -12,33 +12,24 @@ b-container.pt-5
 </template>
 
 <script>
-// import { calculateCalories } from '@/helpers/handleCaloriesCalc'
+import { mixinHandleNotification } from '@/mixins/handleNotification'
+import { handleFoodArrays } from '@/helpers/handleArrays'
 
 export default {
+  mixins: [mixinHandleNotification],
+
   data () {
     return {
-      foods: [
-        {
-          name: 'Apple',
-          carbohydrates: 50,
-          protein: 50,
-          fat: 50,
-          calories: 1000,
-          idFood: 15,
-          items: [
-            {
-              idMeasure: 1,
-              quantity: 100,
-              measure: 'gr',
-              measure_to_grams: 100,
-              carbohydrates: 100,
-              protein: 95,
-              fat: 15,
-              calories: 1000
-            }
-          ]
-        }
-      ]
+      foods: []
+    }
+  },
+
+  async fetch () {
+    try {
+      const response = await this.$foodService.getFoods('', 1)
+      this.foods = handleFoodArrays(response.data.foods)
+    } catch (error) {
+      this.mixinHandleNotificationErrorNotification(error)
     }
   }
 }
