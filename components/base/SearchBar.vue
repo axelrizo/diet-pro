@@ -18,7 +18,7 @@ export default {
   methods: {
 
     onSubmit () {
-      this.$emit('submitSearch', this.form)
+      this.$emit('onSubmitSearch', this.form)
     }
   }
 }
