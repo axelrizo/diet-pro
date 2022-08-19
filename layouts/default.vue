@@ -2,7 +2,10 @@
 div.app
   LayoutAlertContainer
   LayoutNavbar(v-if="$auth.loggedIn")
-  LayoutLandingNavbar(v-else)
+  div(v-else)
+    LayoutLandingNavbar
+    LayoutLogInModal
+    LayoutSignUpModal
   Nuxt
 </template>
 

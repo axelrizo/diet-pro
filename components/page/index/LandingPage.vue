@@ -1,7 +1,5 @@
 <template lang="pug">
 b-container
-  PageIndexLandingPageLogInModal
-  PageIndexLandingPageSignUpModal
   b-row.index__hero
     b-col(cols="3" md="6").align-items-center.d-flex
       b-img.index__principal-image(
