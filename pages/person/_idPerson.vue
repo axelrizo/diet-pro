@@ -1,15 +1,16 @@
 <template lang="pug">
 b-container
-  PagePersonIdPersonNameForm(:form="formName")
+  PagePersonIdPersonNameForm(:form="formName", :idPerson="idPerson")
   BaseLineChart(
     ref="idPersonChart",
-    v-if="person.chartData.labels",
+    v-if="person.chartData.data[0] !== null",
     :labels="person.chartData.labels",
     :data="person.chartData.data"
   )
-  h1(v-else) We don't have data
+  h1(v-else).my-5 We don't have data
   PagePersonIdPersonDateForm(:dates="formDate", @onSubmitDates="onSubmitDates")
   PagePersonIdPersonWeightTable(
+    v-if="person.chartData.data[0] !== null"
     :labels="person.chartData.labels",
     :data="person.chartData.data"
   )
@@ -29,6 +30,7 @@ export default {
   data () {
     return {
       average: 7,
+      idPerson: null,
       person: {
         chartData: {
           labels: [],
@@ -40,7 +42,6 @@ export default {
         secondDate: null
       },
       formName: {
-        idPerson: null,
         name: null
       }
     }
@@ -69,7 +70,7 @@ export default {
           })
 
         this.person = response.data.person
-        this.formName.idPerson = this.person.idPerson
+        this.idPerson = this.person.idPerson
         this.formName.name = this.person.name
 
         this.person.chartData.labels = this.person.chartData.labels.map(

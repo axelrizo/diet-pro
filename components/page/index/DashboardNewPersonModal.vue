@@ -29,7 +29,7 @@ export default {
   methods: {
     async onSubmit () {
       try {
-        const response = await this.$personService
+        const response = await this.$userService
           .createPerson(this.form)
           .catch(({ response }) => {
             throw new Error(response.data.message)
@@ -39,7 +39,7 @@ export default {
 
         this.$emit('fetch')
 
-        this.mixinHandleNotificationSuccessNotification(response.data.message)
+        this.mixinHandleNotificationSuccessNotification(response.message)
       } catch (error) {
         this.mixinHandleNotificationErrorNotification(error)
       }

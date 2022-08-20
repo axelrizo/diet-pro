@@ -12,7 +12,7 @@ export default {
   methods: {
     async onSubmit (form) {
       try {
-        const response = await this.$foodService
+        const response = await this.$userService
           .createFood(form)
           .catch(({ response }) => {
             throw new Error(response.message)

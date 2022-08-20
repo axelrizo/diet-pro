@@ -41,7 +41,6 @@ export default {
     return {
       form: {
         weight: this.lastWeight,
-        idPerson: this.idPerson,
         date: null
       }
     }
@@ -58,7 +57,7 @@ export default {
         this.form.date = formatToConsultApi(new Date())
 
         const response = await this.$personService
-          .updatePersonWeight(this.form)
+          .updatePersonWeight(this.idPerson, this.form)
           .catch(({ response }) => {
             throw new Error(response.data.message)
           })
@@ -74,9 +73,10 @@ export default {
     async createRegister () {
       try {
         this.form.date = formatToConsultApi(new Date())
+        console.log(this.form.date)
 
         const response = await this.$personService
-          .createPersonWeight(this.form)
+          .createPersonWeight(this.idPerson, this.form)
           .catch(({ response }) => {
             throw new Error(response.data.message)
           })

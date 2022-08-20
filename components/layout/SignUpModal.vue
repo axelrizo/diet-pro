@@ -73,7 +73,7 @@ export default {
 
     async onSubmit () {
       try {
-        const dataToSend = {
+        const formToSend = {
           email: this.form.email,
           password: this.form.password,
           username: this.form.username
@@ -84,9 +84,9 @@ export default {
         }
 
         const response = await this.$authService
-          .singUp(dataToSend)
-          .catch(({ response }) => {
-            throw new Error(response.data.message)
+          .singUp(formToSend)
+          .catch((error) => {
+            throw new Error(error.response.data.message)
           })
 
         const responseLogin = await this.$auth
@@ -99,7 +99,7 @@ export default {
 
         this.$bvModal.hide('signupModal')
 
-        this.mixinHandleNotificationSuccessNotification(response.data.message)
+        this.mixinHandleNotificationSuccessNotification(response.message)
         this.mixinHandleNotificationSuccessNotification(responseLogin.data.message)
       } catch (error) {
         this.mixinHandleNotificationErrorNotification(error)

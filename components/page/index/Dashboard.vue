@@ -33,25 +33,26 @@ export default {
     )
     const secondDate = formatToConsultApi(today)
 
-    const data = await this.$personService.getAllPersons(firstDate, secondDate)
+    const data = await this.$userService.getPersonsWeights(firstDate, secondDate)
 
     // format date and know if we can update or create new weight
-    this.persons = data.data.persons.map((element) => {
-      element.canUpdateItsInfo = true
-      if (element.chartData) {
+    this.persons = data.data.persons
+      .map((element) => {
+        if (element.chartData) {
         // know if we can edit this date or not by comparing dates
-        const serverLastDate = new Date(element.chartData.labels.at(-1)).toLocaleDateString('en-US')
-        const currentJSDate = new Date().toLocaleDateString('en-US')
+          const serverLastDate = formatToConsultApi(new Date(element.chartData.labels.at(-1)))
+          const currentJSDate = formatToConsultApi(new Date())
 
-        element.canUpdateItsInfo = serverLastDate !== currentJSDate
-        // iterate each label and change format
-        element.chartData.labels = element.chartData.labels.map((date) => {
-          return formatFriendlyToShow(new Date(date))
-        })
+          element.canUpdateItsInfo = serverLastDate !== currentJSDate
+          // iterate each label and change format
+          element.chartData.labels = element.chartData.labels
+            .map((date) => {
+              return formatFriendlyToShow(new Date(date))
+            })
+          return element
+        }
         return element
-      }
-      return element
-    })
+      })
   }
 }
 </script>

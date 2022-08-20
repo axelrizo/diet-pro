@@ -38,7 +38,7 @@ export default {
 
     async fetchResults (search, pagination) {
       try {
-        const response = await this.$foodService.getFoods(search, pagination)
+        const response = await this.$userService.getFoods(search, pagination)
         this.foods = handleFoodArrays(response.data.foods)
       } catch (error) {
         this.mixinHandleNotificationErrorNotification(error)

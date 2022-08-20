@@ -1,5 +1,5 @@
 <template lang="pug">
-b-modal#CreateFoodMeasureModal(
+b-modal#createFoodMeasureModal(
   title="New Food Measure",
   size="lg",
   centered,
