@@ -38,21 +38,21 @@ export default {
     // format date and know if we can update or create new weight
     this.persons = data.data.persons
       .map((element) => {
-        if (element.chartData) {
-        // know if we can edit this date or not by comparing dates
-          const serverLastDate = formatToConsultApi(new Date(element.chartData.labels.at(-1)))
-          const currentJSDate = formatToConsultApi(new Date())
+        if (!element.chartData) { return element }
 
-          element.canUpdateItsInfo = serverLastDate !== currentJSDate
-          // iterate each label and change format
-          element.chartData.labels = element.chartData.labels
-            .map((date) => {
-              return formatFriendlyToShow(new Date(date))
-            })
-          return element
-        }
+        // know if we can edit this date or not by comparing dates
+        const serverLastDate = formatToConsultApi(new Date(element.chartData.labels.at(-1)))
+        const currentJSDate = formatToConsultApi(new Date())
+        element.canUpdateItsInfo = serverLastDate !== currentJSDate
+
+        // iterate each label and change format
+        element.chartData.labels = element.chartData.labels
+          .map((date) => {
+            return formatFriendlyToShow(new Date(date))
+          })
         return element
-      })
+      }
+      )
   }
 }
 </script>

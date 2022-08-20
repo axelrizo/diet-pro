@@ -73,7 +73,6 @@ export default {
     async createRegister () {
       try {
         this.form.date = formatToConsultApi(new Date())
-        console.log(this.form.date)
 
         const response = await this.$personService
           .createPersonWeight(this.idPerson, this.form)
