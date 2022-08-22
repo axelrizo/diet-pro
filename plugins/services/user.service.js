@@ -41,6 +41,14 @@ export default function ($axios, app) {
         }
       )
     },
+    async getFood (idFood) {
+      const idUser = app.$auth.user.idUser
+      return await $axios.$get(`user/${idUser}/food/${idFood}`,
+        {
+          headers: { Authorization: app.$auth.strategy.token.get() }
+        }
+      )
+    },
     // update
     async updatePersonName (idPerson, form) {
       const idUser = app.$auth.user.idUser

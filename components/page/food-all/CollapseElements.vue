@@ -44,8 +44,9 @@ export default {
           items: [
             {
               quantity: 100,
-              measure: 'gr',
-              measure_to_grams: 100,
+              idMeasure: 0,
+              measureName: 'gr',
+              grams: 100,
               carbohydrates: 100,
               protein: 95,
               fat: 15,

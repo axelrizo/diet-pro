@@ -8,7 +8,7 @@ b-form(@submit.prevent="onSubmit")
     label-for="foodName"
   )
     b-input-group
-      b-form-input#foodName(v-model="form.name")
+      b-form-input#foodName(v-model="food.name")
   //- quantity
   b-form-group(
     label-cols="5",
@@ -34,7 +34,7 @@ b-form(@submit.prevent="onSubmit")
       b-form-input#foodCarbohydrates(
         type="number",
         step="0.1",
-        v-model="form.carbohydrates"
+        v-model="food.carbohydrates"
       )
   //- protein
   b-form-group(
@@ -47,7 +47,7 @@ b-form(@submit.prevent="onSubmit")
       b-form-input#foodProtein(
         type="number",
         step="0.1",
-        v-model="form.protein"
+        v-model="food.protein"
       )
   //- fat
   b-form-group(
@@ -57,7 +57,7 @@ b-form(@submit.prevent="onSubmit")
     label-for="foodFat"
   )
     b-input-group(append="gr")
-      b-form-input#foodFat(type="number", step="0.1", v-model="form.fat")
+      b-form-input#foodFat(type="number", step="0.1", v-model="food.fat")
   //- calories
   b-form-group(
     label-cols="5",
@@ -79,15 +79,14 @@ import { calculateCalories } from '@/helpers/handleCaloriesCalc'
 
 export default {
   props: {
-    foodData: {
+    food: {
       type: Object,
       default () {
         return {
-          foodName: '',
-          foodQuantity: 100,
-          foodCarbohydrates: 0,
-          foodProtein: 0,
-          foodFat: 0
+          name: '',
+          carbohydrates: 0,
+          protein: 0,
+          fat: 0
         }
       }
     },
@@ -100,29 +99,23 @@ export default {
 
   data () {
     return {
-      form: {
-        name: this.foodData.foodName,
-        carbohydrates: this.foodData.foodCarbohydrates,
-        protein: this.foodData.foodProtein,
-        fat: this.foodData.foodFat
-      },
-      quantity: this.foodData.foodQuantity
+      quantity: 100
     }
   },
 
   computed: {
     foodCalories () {
       return calculateCalories(
-        this.form.carbohydrates,
-        this.form.protein,
-        this.form.fat
+        this.food.carbohydrates,
+        this.food.protein,
+        this.food.fat
       )
     }
   },
 
   methods: {
     onSubmit () {
-      this.$emit('onSubmitFoodForm', this.form)
+      this.$emit('onSubmitFoodForm', this.food)
     }
   }
 }

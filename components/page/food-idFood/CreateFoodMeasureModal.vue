@@ -84,6 +84,11 @@ import { calculateCalories } from '@/helpers/handleCaloriesCalc'
 
 export default {
   props: {
+    updateModal: {
+      type: Boolean,
+      default: false
+    },
+
     foodInfo: {
       type: Object,
       default () {
@@ -135,7 +140,7 @@ export default {
 
   methods: {
     onSubmit () {
-      console.log(this.form)
+      this.$emit('onSubmit')
     }
   }
 }

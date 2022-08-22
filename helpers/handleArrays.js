@@ -1,7 +1,7 @@
 import { calculateCalories } from '@/helpers/handleCaloriesCalc'
 
 const handleFoodArrays = (array) => {
-  const returnedArray = array
+  return array
     .map((food) => {
       const baseMeasureItem = { quantity: 100, measureName: 'gr', grams: 100 }
 
@@ -27,14 +27,10 @@ const handleFoodArrays = (array) => {
             ...measure,
             calories: calculateCalories(measure.carbohydrates, measure.protein, measure.fat)
           }
-
           return measure
         })
-
       return food
     })
-
-  return returnedArray
 }
 
 export {
