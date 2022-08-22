@@ -1,6 +1,6 @@
 <template lang="pug">
 b-container.pt-5
-  PageFoodAllCreateFoodModal
+  PageFoodAllCreateFoodModal(@onSubmit="onSubmit")
   BaseSearchBar(@onSubmitSearch="onSubmitSearch")
   b-button.mt-4(v-b-modal.createFoodModal, block, size="lg", variant="success") Add new food
   .mt-4(v-if="foods.length > 0")
@@ -26,8 +26,8 @@ export default {
 
   async fetch () {
     const BASE_PAGE_TO_SHOW = 1
-    const DEFAULT_SEARCH_PARAM = ''
-    await this.fetchResults(DEFAULT_SEARCH_PARAM, BASE_PAGE_TO_SHOW)
+    const EMPTY_SEARCH = ''
+    await this.fetchResults(EMPTY_SEARCH, BASE_PAGE_TO_SHOW)
   },
 
   methods: {
@@ -36,13 +36,15 @@ export default {
       this.fetchResults(form.search, BASE_PAGE_TO_SHOW)
     },
 
+    onSubmit () {
+      const BASE_PAGE_TO_SHOW = 1
+      const EMPTY_SEARCH = ''
+      this.fetchResults(EMPTY_SEARCH, BASE_PAGE_TO_SHOW)
+    },
+
     async fetchResults (search, pagination) {
-      try {
-        const response = await this.$userService.getFoods(search, pagination)
-        this.foods = handleFoodArrays(response.data.foods)
-      } catch (error) {
-        this.mixinHandleNotificationErrorNotification(error)
-      }
+      const response = await this.$userService.getFoods(search, pagination)
+      this.foods = handleFoodArrays(response.data.foods)
     }
   }
 }

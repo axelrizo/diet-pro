@@ -18,6 +18,8 @@ export default {
             throw new Error(response.message)
           })
 
+        this.$emit('onSubmit')
+
         this.$bvModal.hide('createFoodModal')
 
         this.mixinHandleNotificationSuccessNotification(response.message)
