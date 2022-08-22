@@ -38,6 +38,8 @@ export default {
 
         this.$bvModal.hide('loginModal')
 
+        this.$router.push('/')
+
         this.mixinHandleNotificationSuccessNotification(response.data.message)
       } catch (error) {
         this.mixinHandleNotificationErrorNotification(error)

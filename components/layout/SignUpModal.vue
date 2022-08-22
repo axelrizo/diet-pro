@@ -99,6 +99,8 @@ export default {
 
         this.$bvModal.hide('signupModal')
 
+        this.$router.push('/')
+
         this.mixinHandleNotificationSuccessNotification(response.message)
         this.mixinHandleNotificationSuccessNotification(responseLogin.data.message)
       } catch (error) {
