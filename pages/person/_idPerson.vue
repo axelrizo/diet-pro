@@ -63,7 +63,7 @@ export default {
   methods: {
     async fetchInfo (firstDate, secondDate) {
       try {
-        const response = await this.$personService
+        const response = await this.$userService
           .getPerson(this.$route.params.idPerson, firstDate, secondDate)
           .catch(({ response }) => {
             throw new Error(response.data.message)

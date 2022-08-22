@@ -32,6 +32,15 @@ export default function ($axios, app) {
         }
       )
     },
+    async getPerson (idPerson, firstDate, secondDate) {
+      const idUser = app.$auth.user.idUser
+      return await $axios.$get(`user/${idUser}/person/${idPerson}/person-weight`,
+        {
+          params: { firstDate, secondDate },
+          headers: { Authorization: app.$auth.strategy.token.get() }
+        }
+      )
+    },
     // update
     async updatePersonName (idPerson, form) {
       const idUser = app.$auth.user.idUser
