@@ -15,7 +15,7 @@ export default {
         const response = await this.$userService
           .createFood(form)
           .catch(({ response }) => {
-            throw new Error(response.message)
+            throw new Error(response.data.message)
           })
 
         this.$emit('onSubmit')
