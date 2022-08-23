@@ -1,7 +1,7 @@
 <template lang="pug">
 b-container.pt-5
-  PageFoodAllCreateFoodModal(@onSubmit="onSubmit")
-  BaseSearchBar(@onSubmitSearch="onSubmitSearch")
+  PageFoodAllCreateFoodModal(@onSubmit="onSubmitCreateFood")
+  BaseSearchBar(@onSubmit="onSubmitSearch")
   b-button.mt-4(v-b-modal.createFoodModal, block, size="lg", variant="success") Add new food
   .mt-4(v-if="foods.length > 0")
     PageFoodAllCollapseElements(
@@ -36,7 +36,7 @@ export default {
       this.fetchResults(form.search, BASE_PAGE_TO_SHOW)
     },
 
-    onSubmit () {
+    onSubmitCreateFood () {
       const BASE_PAGE_TO_SHOW = 1
       const EMPTY_SEARCH = ''
       this.fetchResults(EMPTY_SEARCH, BASE_PAGE_TO_SHOW)
