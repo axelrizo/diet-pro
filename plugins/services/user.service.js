@@ -55,6 +55,12 @@ export default function ($axios, app) {
       return await $axios.$put(`user/${idUser}/person/${idPerson}`, form,
         { headers: { Authorization: app.$auth.strategy.token.get() } }
       )
+    },
+    async updateFood (idFood, form) {
+      const idUser = app.$auth.user.idUser
+      return await $axios.$put(`user/${idUser}/food/${idFood}`, form,
+        { headers: { Authorization: app.$auth.strategy.token.get() } }
+      )
     }
     // delete
   }
