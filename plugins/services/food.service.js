@@ -18,6 +18,11 @@ export default function ($axios, app) {
       return await $axios.$delete(`/food/measure/${idMeasure}`,
         { headers: { Authorization: app.$auth.strategy.token.get() } }
       )
+    },
+    async deleteFood (idFood) {
+      return await $axios.$delete(`/food/${idFood}`,
+        { headers: { Authorization: app.$auth.strategy.token.get() } }
+      )
     }
   }
   return service

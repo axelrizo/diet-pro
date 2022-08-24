@@ -23,13 +23,17 @@ BaseIterableCollapse.mt-3
         b-table(striped, hover, :items="food.items", responsive, outlined)
     b-row.m-2
       b-col
-        b-button(block, variant="danger") Delete
+        b-button(block, variant="danger" @click="onDelete()") Delete
       b-col
         b-button(block, variant="secondary" :to="`${food.idFood}`") Details/Edit
 </template>
 
 <script>
+import { mixinHandleNotification } from '@/mixins/handleNotification'
+
 export default {
+  mixins: [mixinHandleNotification],
+
   props: {
     food: {
       type: Object,
@@ -54,6 +58,20 @@ export default {
             }
           ]
         }
+      }
+    }
+  },
+
+  methods: {
+    async onDelete () {
+      try {
+        const response = await this.$foodService.deleteFood(this.food.idFood)
+
+        this.$emit('onDelete')
+
+        this.mixinHandleNotificationSuccessNotification(response.message)
+      } catch (error) {
+        this.mixinHandleNotificationErrorNotification(error)
       }
     }
   }

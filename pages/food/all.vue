@@ -8,6 +8,7 @@ b-container.pt-5
       v-for="(food, index) in foods",
       :food="food",
       :key="index"
+      @onDelete="$fetch"
     )
 </template>
 
