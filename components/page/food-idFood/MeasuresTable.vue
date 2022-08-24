@@ -17,8 +17,16 @@ b-table(striped, hover, outlined, :items="formattedArray", responsive)
 </template>
 
 <script>
+import { mixinHandleNotification } from '@/mixins/handleNotification'
 export default {
+  mixins: [mixinHandleNotification],
+
   props: {
+    actions: {
+      type: Boolean,
+      default: false
+    },
+
     measures: {
       type: Array,
       default () {
@@ -40,6 +48,7 @@ export default {
 
   computed: {
     formattedArray () {
+      if (this.actions !== true) { return this.measures }
       return this.measures.map((food) => {
         return { ...food, erase: '', edit: '' }
       })
@@ -47,12 +56,26 @@ export default {
   },
 
   methods: {
-    onEdit (payload) {
-      console.log('edit' + payload)
+    onEdit (idMeasure) {
+      this.$emit('onEdit', idMeasure)
+
+      this.$bvModal.show('createFoodMeasureModal')
     },
 
-    onDelete (payload) {
-      console.log('delete' + payload)
+    async onDelete (idMeasure) {
+      try {
+        const response = await this.$foodService
+          .deleteFoodMeasure(idMeasure)
+          .catch(({ response }) => {
+            throw new Error(response.data.message)
+          })
+
+        this.$emit('deleteMeasure')
+
+        this.mixinHandleNotificationSuccessNotification(response.message)
+      } catch (error) {
+        this.mixinHandleNotificationErrorNotification(error)
+      }
     }
   }
 }

@@ -22,11 +22,15 @@ export default {
       try {
         const { name, carbohydrates, protein, fat } = form
         const formToSend = { name, carbohydrates, protein, fat }
+
         const response = await this.$userService
           .updateFood(this.food.idFood, formToSend)
           .catch(({ response }) => {
             throw new Error(response.data.message)
           })
+
+        this.$emit('fetch')
+
         this.mixinHandleNotificationSuccessNotification(response.message)
       } catch (error) {
         this.mixinHandleNotificationErrorNotification(error)

@@ -7,7 +7,7 @@ b-modal#createFoodMeasureModal(
 )
   b-form(@submit.prevent="onSubmit")
     h5 Base measure
-    PageFoodFoodNameMeasuresTable
+    PageFoodIdFoodMeasuresTable(:measures="measures")
     //- measure name
     b-form-group(
       label-cols="5",
@@ -15,7 +15,7 @@ b-modal#createFoodMeasureModal(
       label="Measure name:",
       label-for="foodMeasureName"
     )
-      b-form-input#foodMeasureName(v-model="form.foodMeasureName")
+      b-form-input#foodMeasureName(v-model="form.name")
     //- measure quantity
     b-form-group(
       label-cols="5",
@@ -24,7 +24,7 @@ b-modal#createFoodMeasureModal(
       label-for="foodMeasureQuantity"
     )
       b-input-group(append="gr")
-        b-form-input#foodMeasureQuantity(v-model="form.foodMeasureQuantity")
+        b-form-input#foodMeasureQuantity(v-model="form.quantity")
     //- measure carbohydrates
     b-form-group(
       label-cols="5",
@@ -72,7 +72,7 @@ b-modal#createFoodMeasureModal(
         )
     //- submit button
     b-button.d-block.ml-auto(
-      v-if="updateModal",
+      v-if="idMeasure !== 0",
       type="submit",
       variant="secondary"
     ) Update
@@ -80,67 +80,133 @@ b-modal#createFoodMeasureModal(
 </template>
 
 <script>
+import { mixinHandleNotification } from '@/mixins/handleNotification'
 import { calculateCalories } from '@/helpers/handleCaloriesCalc'
 
 export default {
+  mixins: [mixinHandleNotification],
+
   props: {
-    updateModal: {
-      type: Boolean,
-      default: false
+    idMeasure: {
+      type: Number,
+      default: 0
     },
 
-    foodInfo: {
-      type: Object,
-      default () {
-        return {
-          foodMeasureName: '',
-          foodMeasureQuantity: 0,
-          carbohydrates: 0,
-          protein: 0,
-          fat: 0
-        }
-      }
+    idFood: {
+      type: Number,
+      default: 0
+    },
+
+    name: {
+      type: String,
+      default: ''
+    },
+
+    quantity: {
+      type: Number,
+      default: 0
+    },
+
+    measures: {
+      type: Array,
+      default () { return [] }
+    },
+
+    carbohydrates: {
+      type: Number,
+      default: 0
+    },
+
+    protein: {
+      type: Number,
+      default: 0
+    },
+
+    fat: {
+      type: Number,
+      default: 0
     }
   },
 
   data () {
     return {
       form: {
-        foodMeasureName: this.foodInfo.foodMeasureName,
-        foodMeasureQuantity: this.foodInfo.foodMeasureQuantity
+        name: this.name,
+        quantity: this.quantity
       }
     }
   },
 
   computed: {
     computedProperties () {
-      const BASE_100_GRAMS_MEASURE = 100
-      const MeasureCarbohydrates =
-        (this.form.foodMeasureQuantity * this.foodInfo.carbohydrates) /
-        BASE_100_GRAMS_MEASURE
-      const MeasureProtein =
-        (this.form.foodMeasureQuantity * this.foodInfo.protein) /
-        BASE_100_GRAMS_MEASURE
-      const MeasureFat =
-        (this.form.foodMeasureQuantity * this.foodInfo.fat) /
-        BASE_100_GRAMS_MEASURE
+      const BASE_100_GRAMS = 100
+      const { quantity } = this.form
+
+      const carbohydrates = (quantity * this.carbohydrates) / BASE_100_GRAMS
+      const protein = (quantity * this.protein) / BASE_100_GRAMS
+      const fat = (quantity * this.fat) / BASE_100_GRAMS
 
       return {
-        carbohydrates: MeasureCarbohydrates,
-        protein: MeasureProtein,
-        fat: MeasureFat,
-        calories: calculateCalories(
-          MeasureCarbohydrates,
-          MeasureProtein,
-          MeasureFat
-        )
+        carbohydrates,
+        protein,
+        fat,
+        calories: calculateCalories(carbohydrates, protein, fat)
       }
+    }
+  },
+
+  watch: {
+    name () {
+      this.form.name = this.name
+    },
+
+    quantity () {
+      this.form.quantity = this.quantity
     }
   },
 
   methods: {
     onSubmit () {
-      this.$emit('onSubmit')
+      if (this.idMeasure !== 0) {
+        return this.updateFood()
+      }
+      return this.createFood()
+    },
+
+    async createFood () {
+      try {
+        const response = await this.$foodService
+          .createFoodMeasure(this.idFood, this.form)
+          .catch(({ response }) => {
+            throw new Error(response.data.message)
+          })
+
+        this.$emit('fetchInfo')
+
+        this.$bvModal.hide('createFoodMeasureModal')
+
+        this.mixinHandleNotificationSuccessNotification(response.message)
+      } catch (error) {
+        this.mixinHandleNotificationErrorNotification(error)
+      }
+    },
+
+    async updateFood () {
+      try {
+        const response = await this.$foodService
+          .updateFoodMeasure(this.idFood, this.idMeasure, this.form)
+          .catch(({ response }) => {
+            throw new Error(response.data.message)
+          })
+
+        this.$emit('fetchInfo')
+
+        this.$bvModal.hide('createFoodMeasureModal')
+
+        this.mixinHandleNotificationSuccessNotification(response.message)
+      } catch (error) {
+        this.mixinHandleNotificationErrorNotification(error)
+      }
     }
   }
 }

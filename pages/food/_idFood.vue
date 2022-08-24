@@ -1,9 +1,23 @@
 <template lang="pug">
 b-container.py-5
-  PageFoodIdFoodCreateFoodMeasureModal(@onSubmitMeasureModal="onSubmitMeasureModal")
-  PageFoodIdFoodCreateFoodMeasureModal(@onSubmitMeasureModal="onSubmitMeasureModal" :updateModal="true")
-  PageFoodIdFoodUpdateForm(:food="food")
-  PageFoodIdFoodMeasuresTable(:measures="food.items").mt-4
+  PageFoodIdFoodCreateFoodMeasureModal(
+    @fetchInfo="$fetch",
+    :idFood="parseInt($route.params.idFood)",
+    :idMeasure="idMeasure",
+    :name="computedName",
+    :quantity="computedQuantity",
+    :carbohydrates="parseInt(food.carbohydrates)",
+    :protein="parseInt(food.protein)",
+    :fat="parseInt(food.fat)",
+    :measures="food.items"
+  )
+  PageFoodIdFoodUpdateForm(:food="food", @fetch="$fetch")
+  PageFoodIdFoodMeasuresTable.mt-4(
+    :measures="food.items",
+    @deleteMeasure="$fetch",
+    @onEdit="setIdMeasure",
+    :actions="true"
+  )
   b-button.mt-4(
     variant="success",
     v-b-modal.createFoodMeasureModal,
@@ -18,7 +32,8 @@ import { handleFoodArrays } from '@/helpers/handleArrays'
 export default {
   data () {
     return {
-      food: {}
+      food: {},
+      idMeasure: 0
     }
   },
 
@@ -26,14 +41,45 @@ export default {
     this.food = await this.fetchInfo()
   },
 
-  methods: {
-    onSubmitMeasureModal () {
-      // fetch
+  computed: {
+    computedName () {
+      if (this.idMeasure === 0) {
+        return ''
+      }
+      return this.food.items.filter(
+        measure => measure.idMeasure === this.idMeasure
+      )[0].measureName
     },
 
+    computedQuantity () {
+      if (this.idMeasure === 0) {
+        return 0
+      }
+      return this.food.items.filter(
+        measure => measure.idMeasure === this.idMeasure
+      )[0].idMeasure
+    }
+  },
+
+  mounted () {
+    // reset idMeasure every time that close the modal
+    this.$root.$on('bv::modal::hidden', (bvEvent, modalId) => {
+      if (modalId === 'createFoodMeasureModal') {
+        this.idMeasure = 0
+      }
+    })
+  },
+
+  methods: {
     async fetchInfo () {
-      const response = await this.$userService.getFood(this.$route.params.idFood)
+      const response = await this.$userService.getFood(
+        this.$route.params.idFood
+      )
       return handleFoodArrays([response.data.food])[0]
+    },
+
+    setIdMeasure (idMeasure) {
+      this.idMeasure = idMeasure
     }
   }
 }
