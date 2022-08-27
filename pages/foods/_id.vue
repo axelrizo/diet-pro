@@ -1,6 +1,6 @@
 <template lang="pug">
 b-container.py-5
-  PageFoodIdFoodCreateFoodMeasureModal(
+  PageFoodsIdCreateFoodMeasureModal(
     @fetchInfo="$fetch",
     :idFood="parseInt($route.params.idFood)",
     :idMeasure="idMeasure",
@@ -11,8 +11,8 @@ b-container.py-5
     :fat="parseInt(food.fat)",
     :measures="food.items"
   )
-  PageFoodIdFoodUpdateForm(:food="food", @fetch="$fetch")
-  PageFoodIdFoodMeasuresTable.mt-4(
+  PageFoodsIdUpdateForm(:food="food", @fetch="$fetch")
+  PageFoodsIdMeasuresTable.mt-4(
     :measures="food.items",
     @deleteMeasure="$fetch",
     @onEdit="setIdMeasure",

@@ -1,6 +1,6 @@
 <template lang="pug">
 b-container
-  PagePersonIdPersonNameForm(:form="formName", :idPerson="idPerson")
+  PagePersonsIdNameForm(:form="formName", :idPerson="idPerson")
   BaseLineChart(
     ref="idPersonChart",
     v-if="person.chartData.data[0] !== null",
@@ -8,8 +8,8 @@ b-container
     :data="person.chartData.data"
   )
   h1(v-else).my-5 We don't have data
-  PagePersonIdPersonDateForm(:dates="formDate", @onSubmitDates="onSubmitDates")
-  PagePersonIdPersonWeightTable(
+  PagePersonsIdDateForm(:dates="formDate", @onSubmitDates="onSubmitDates")
+  PagePersonsIdWeightTable(
     v-if="person.chartData.data[0] !== null"
     :labels="person.chartData.labels",
     :data="person.chartData.data"

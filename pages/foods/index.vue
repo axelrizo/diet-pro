@@ -1,10 +1,10 @@
 <template lang="pug">
 b-container.pt-5
-  PageFoodAllCreateFoodModal(@onSubmit="onSubmitCreateFood")
+  PageFoodsCreateFoodModal(@onSubmit="onSubmitCreateFood")
   BaseSearchBar(@onSubmit="onSubmitSearch")
   b-button.mt-4(v-b-modal.createFoodModal, block, size="lg", variant="success") Add new food
   .mt-4(v-if="foods.length > 0")
-    PageFoodAllCollapseElements(
+    PageFoodsCollapseElements(
       v-for="(food, index) in foods",
       :food="food",
       :key="index"

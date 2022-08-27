@@ -7,9 +7,9 @@ b-navbar(toggleable="lg" type="dark" variant="success")
       b-navbar-nav.ml-auto
         b-nav-item(to="/") Persons
         b-nav-item(to="/shopping-list") Shopping List
-        b-nav-item(to="/plan/all") Plans
-        b-nav-item(to="/day/all") Days
-        b-nav-item(to="/meal/all") Meals
-        b-nav-item(to="/food/all") Foods
+        b-nav-item(to="/plans") Plans
+        b-nav-item(to="/days") Days
+        b-nav-item(to="/meals") Meals
+        b-nav-item(to="/foods") Foods
         b-nav-item(@click="$auth.logout()") Log out
 </template>
