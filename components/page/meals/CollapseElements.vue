@@ -39,7 +39,7 @@ export default {
   methods: {
     async onDelete () {
       try {
-        const response = await this.$foodService.deleteFood(this.food.idFood)
+        const response = await this.$foodsService.deleteFood(this.food.idFood)
 
         this.$emit('onDelete')
 

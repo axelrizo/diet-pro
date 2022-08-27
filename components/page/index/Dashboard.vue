@@ -33,7 +33,7 @@ export default {
     )
     const secondDate = formatToConsultApi(today)
 
-    const data = await this.$userService.getPersonsWeights(firstDate, secondDate)
+    const data = await this.$usersService.getPersonsWeights(firstDate, secondDate)
 
     // format date and know if we can update or create new weight
     this.persons = data.data.persons

@@ -175,7 +175,7 @@ export default {
 
     async createFood () {
       try {
-        const response = await this.$foodService
+        const response = await this.$foodsService
           .createFoodMeasure(this.idFood, this.form)
           .catch(({ response }) => {
             throw new Error(response.data.message)
@@ -193,7 +193,7 @@ export default {
 
     async updateFood () {
       try {
-        const response = await this.$foodService
+        const response = await this.$foodsService
           .updateFoodMeasure(this.idFood, this.idMeasure, this.form)
           .catch(({ response }) => {
             throw new Error(response.data.message)

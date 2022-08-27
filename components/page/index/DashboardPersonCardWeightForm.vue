@@ -56,7 +56,7 @@ export default {
       try {
         this.form.date = formatToConsultApi(new Date())
 
-        const response = await this.$personService
+        const response = await this.$personsService
           .updatePersonWeight(this.idPerson, this.form)
           .catch(({ response }) => {
             throw new Error(response.data.message)
@@ -74,7 +74,7 @@ export default {
       try {
         this.form.date = formatToConsultApi(new Date())
 
-        const response = await this.$personService
+        const response = await this.$personsService
           .createPersonWeight(this.idPerson, this.form)
           .catch(({ response }) => {
             throw new Error(response.data.message)

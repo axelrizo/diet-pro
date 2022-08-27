@@ -1,11 +1,11 @@
 import authService from './services/auth.service'
-import userService from './services/user.service'
-import personService from './services/person.service'
-import foodService from './services/food.service'
+import usersService from './services/users.service'
+import personsService from './services/persons.service'
+import foodsService from './services/foods.service'
 
 export default function ({ $axios, app }, inject) {
   inject('authService', authService($axios))
-  inject('userService', userService($axios, app))
-  inject('personService', personService($axios, app))
-  inject('foodService', foodService($axios, app))
+  inject('usersService', usersService($axios, app))
+  inject('personsService', personsService($axios, app))
+  inject('foodsService', foodsService($axios, app))
 }

@@ -44,7 +44,7 @@ export default {
     },
 
     async fetchResults (search, pagination) {
-      const response = await this.$userService.getFoods(search, pagination)
+      const response = await this.$usersService.getFoods(search, pagination)
       this.foods = handleFoodArrays(response.data.foods)
     }
   }

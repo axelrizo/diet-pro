@@ -3,20 +3,20 @@ export default function ($axios, app) {
     // create
     async createPerson (form) {
       const idUser = app.$auth.user.idUser
-      return await $axios.$post(`/user/${idUser}/person`, form,
+      return await $axios.$post(`/users/${idUser}/persons`, form,
         { header: { Authorization: app.$auth.strategy.token.get() } }
       )
     },
     async createFood (form) {
       const idUser = app.$auth.user.idUser
-      return await $axios.$post(`/user/${idUser}/food`, form,
+      return await $axios.$post(`/users/${idUser}/foods`, form,
         { header: { Authorization: app.$auth.strategy.token.get() } }
       )
     },
     // read
     async getPersonsWeights (firstDate, secondDate) {
       const idUser = app.$auth.user.idUser
-      return await $axios.$get(`/user/${idUser}/person-weight`,
+      return await $axios.$get(`/users/${idUser}/person-weights`,
         {
           params: { firstDate, secondDate },
           headers: { Authorization: app.$auth.strategy.token.get() }
@@ -25,7 +25,7 @@ export default function ($axios, app) {
     },
     async getFoods (search, pagination) {
       const idUser = app.$auth.user.idUser
-      return await $axios.$get(`/user/${idUser}/food`,
+      return await $axios.$get(`/users/${idUser}/foods`,
         {
           params: { search, pagination },
           headers: { Authorization: app.$auth.strategy.token.get() }
@@ -34,7 +34,7 @@ export default function ($axios, app) {
     },
     async getPerson (idPerson, firstDate, secondDate) {
       const idUser = app.$auth.user.idUser
-      return await $axios.$get(`user/${idUser}/person/${idPerson}/person-weight`,
+      return await $axios.$get(`users/${idUser}/persons/${idPerson}/person-weights`,
         {
           params: { firstDate, secondDate },
           headers: { Authorization: app.$auth.strategy.token.get() }
@@ -43,8 +43,17 @@ export default function ($axios, app) {
     },
     async getFood (idFood) {
       const idUser = app.$auth.user.idUser
-      return await $axios.$get(`user/${idUser}/food/${idFood}`,
+      return await $axios.$get(`users/${idUser}/foods/${idFood}`,
         {
+          headers: { Authorization: app.$auth.strategy.token.get() }
+        }
+      )
+    },
+    async getMeals (search, pagination) {
+      const idUser = app.$auth.user.idUser
+      return await $axios.$get(`/users/${idUser}/meals`,
+        {
+          params: { search, pagination },
           headers: { Authorization: app.$auth.strategy.token.get() }
         }
       )
@@ -52,13 +61,13 @@ export default function ($axios, app) {
     // update
     async updatePersonName (idPerson, form) {
       const idUser = app.$auth.user.idUser
-      return await $axios.$put(`user/${idUser}/person/${idPerson}`, form,
+      return await $axios.$put(`users/${idUser}/persons/${idPerson}`, form,
         { headers: { Authorization: app.$auth.strategy.token.get() } }
       )
     },
     async updateFood (idFood, form) {
       const idUser = app.$auth.user.idUser
-      return await $axios.$put(`user/${idUser}/food/${idFood}`, form,
+      return await $axios.$put(`users/${idUser}/foods/${idFood}`, form,
         { headers: { Authorization: app.$auth.strategy.token.get() } }
       )
     }

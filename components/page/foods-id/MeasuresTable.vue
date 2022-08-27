@@ -64,7 +64,7 @@ export default {
 
     async onDelete (idMeasure) {
       try {
-        const response = await this.$foodService
+        const response = await this.$foodsService
           .deleteFoodMeasure(idMeasure)
           .catch(({ response }) => {
             throw new Error(response.data.message)

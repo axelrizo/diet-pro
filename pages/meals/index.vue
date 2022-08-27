@@ -18,7 +18,7 @@ export default {
 
   methods: {
     async fetchMeals (search = '', pagination = 1) {
-      const response = await this.$userService.getMeals(search, pagination)
+      const response = await this.$usersService.getMeals(search, pagination)
       return response.data.meals
     }
   }

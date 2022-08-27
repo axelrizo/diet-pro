@@ -23,7 +23,7 @@ export default {
         const { name, carbohydrates, protein, fat } = form
         const formToSend = { name, carbohydrates, protein, fat }
 
-        const response = await this.$userService
+        const response = await this.$usersService
           .updateFood(this.food.idFood, formToSend)
           .catch(({ response }) => {
             throw new Error(response.data.message)

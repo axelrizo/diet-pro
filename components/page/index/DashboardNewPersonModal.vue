@@ -29,7 +29,7 @@ export default {
   methods: {
     async onSubmit () {
       try {
-        const response = await this.$userService
+        const response = await this.$usersService
           .createPerson(this.form)
           .catch(({ response }) => {
             throw new Error(response.data.message)

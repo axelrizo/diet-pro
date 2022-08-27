@@ -72,7 +72,7 @@ export default {
 
   methods: {
     async fetchInfo () {
-      const response = await this.$userService.getFood(
+      const response = await this.$usersService.getFood(
         this.$route.params.idFood
       )
       return handleFoodArrays([response.data.food])[0]
