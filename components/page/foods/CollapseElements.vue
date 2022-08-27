@@ -25,7 +25,7 @@ BaseIterableCollapse.mt-3
       b-col
         b-button(block, variant="danger" @click="onDelete()") Delete
       b-col
-        b-button(block, variant="secondary" :to="`${food.idFood}`") Details/Edit
+        b-button(block, variant="secondary" :to="`foods/${food.idFood}`") Details/Edit
 </template>
 
 <script>
@@ -65,12 +65,15 @@ export default {
   methods: {
     async onDelete () {
       try {
-        const response = await this.$foodsService.deleteFood(this.food.idFood)
+        const response = await this.$foodsService.deleteFood(this.food.idFood).catch(({ response }) => {
+          throw new Error(response.data.message)
+        })
 
         this.$emit('onDelete')
 
         this.mixinHandleNotificationSuccessNotification(response.message)
       } catch (error) {
+        console.log(error)
         this.mixinHandleNotificationErrorNotification(error)
       }
     }

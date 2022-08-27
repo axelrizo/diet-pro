@@ -9,7 +9,7 @@ export default function ($axios, app) {
     // read
     // update
     async updatePersonWeight (idPerson, form) {
-      return await $axios.$put(`/persons/${idPerson}/person-weight`, form,
+      return await $axios.$put(`/persons/${idPerson}/person-weights`, form,
         { headers: { Authorization: app.$auth.strategy.token.get() } }
       )
     }

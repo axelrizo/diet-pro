@@ -7,7 +7,7 @@ b-modal#createFoodMeasureModal(
 )
   b-form(@submit.prevent="onSubmit")
     h5 Base measure
-    PageFoodIdFoodMeasuresTable(:measures="measures")
+    PageFoodsIdMeasuresTable(:measures="measures")
     //- measure name
     b-form-group(
       label-cols="5",

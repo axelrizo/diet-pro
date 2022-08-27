@@ -2,7 +2,7 @@
 b-container.py-5
   PageFoodsIdCreateFoodMeasureModal(
     @fetchInfo="$fetch",
-    :idFood="parseInt($route.params.idFood)",
+    :idFood="parseInt($route.params.id)",
     :idMeasure="idMeasure",
     :name="computedName",
     :quantity="computedQuantity",
@@ -73,7 +73,7 @@ export default {
   methods: {
     async fetchInfo () {
       const response = await this.$usersService.getFood(
-        this.$route.params.idFood
+        this.$route.params.id
       )
       return handleFoodArrays([response.data.food])[0]
     },
