@@ -1,8 +1,8 @@
 <template lang="pug">
-b-container
+b-container.index
   b-row.index__hero
     b-col(cols="3" md="6").align-items-center.d-flex
-      b-img.index__principal-image(
+      b-img.hidden.index__principal-image(
         :src="require('~/components/page/index/assets/landing-image-1.png')"
       )
     b-col(cols="9" md="6").align-items-center.d-flex
@@ -18,12 +18,12 @@ b-container
       b-col(cols="9" md="6")
         h3 If you have tried everything and it has not worked for you.
       b-col(cols="3" md="6")
-        b-img.index__image.index__image--left.position-absolute.ml-lg-5(
+        b-img.hidden.index__image.index__image--left.position-absolute.ml-lg-5(
           :src="require('~/components/page/index/assets/landing-image-2.png')"
         )
     b-row.index__card
       b-col(cols="3" md="6")
-        b-img.index__image.position-absolute.mr-lg-5(
+        b-img.hidden.index__image.position-absolute.mr-lg-5(
           :src="require('~/components/page/index/assets/landing-image-3.png')"
         )
       b-col(cols="9" md="6")
@@ -32,12 +32,12 @@ b-container
       b-col(cols="9" md="6")
         h3 Add your favorite foods and only worry about the quantities
       b-col(cols="3" md="6")
-        b-img.index__image.index__image--left.position-absolute.ml-lg-5(
+        b-img.hidden.index__image.index__image--left.position-absolute.ml-lg-5(
           :src="require('~/components/page/index/assets/landing-image-4.png')"
         )
   b-container.my-5
     .text-center.d-flex.justify-content-center.mb-4
-      b-img(
+      b-img.hidden(
         :src="require('~/components/page/index/assets/landing-image-5.png')"
       )
     h3.text-center.mb-4 What are you waiting to start
@@ -48,12 +48,15 @@ b-container
 <script>
 export default {
   mounted () {
-    const images = document.querySelectorAll('img')
+    const index = document.querySelector('.index')
+    const images = index.querySelectorAll('img')
     images.forEach((image) => {
-      image.classList.add('hidden')
       image.addEventListener('load', () => {
         image.classList.remove('hidden')
       })
+      setTimeout(() => {
+        image.classList.remove('hidden')
+      }, 700)
     })
   }
 }
