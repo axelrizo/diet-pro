@@ -45,6 +45,20 @@ b-container
       b-button(variant="success" size="lg" v-b-modal.signupModal) Sign up
 </template>
 
+<script>
+export default {
+  mounted () {
+    const images = document.querySelectorAll('img')
+    images.forEach((image) => {
+      image.classList.add('hidden')
+      image.addEventListener('load', () => {
+        image.classList.remove('hidden')
+      })
+    })
+  }
+}
+</script>
+
 <style lang="scss" scoped>
 .index {
   &__hero {
@@ -52,11 +66,13 @@ b-container
   }
 
   &__principal-image {
+    transition: opacity .3s;
     position: absolute;
     right: 0;
   }
 
   &__image{
+    transition: opacity .3s;
     right: 0;
     top: 0;
     transform: translateY(-50%);
@@ -69,5 +85,9 @@ b-container
 .index__card{
   height: 400px;
   align-items: center;
+}
+
+.hidden{
+  opacity: 0;
 }
 </style>
