@@ -1,7 +1,7 @@
 <template lang="pug">
 b-container
   //- SEARCH-BAR
-  BaseSearchBar(@onSubmit="onSubmitSearch")
+  SearchBar(@onSubmit="onSubmitSearch")
   //- CREATE MEAL MODAL
   b-modal#createMealModal(title="New Meal", size="lg", centered, hide-footer)
     b-form.pb-4(@submit.prevent="onSubmit")
@@ -23,6 +23,9 @@ b-container
       )
         b-input-group
           b-form-input#mealMeasure(placeholder="Ex: Portion", v-model="formCreateMeal.measure")
+      b-table(striped, hover, :items="formCreateMeal.foods", responsive, outlined, :fields="['foodName', 'quantity', 'carbohydrates', 'protein', 'fat']")
+        template(#cell(quantity)="data")
+          b-input(type="number" v-model="data.item.quantity" min="1")
       b-button.mt-4(
         v-b-modal.addNewFoodToMeal,
         block,
@@ -33,12 +36,12 @@ b-container
       b-button.ml-auto.d-block(type="submit", variant="success") Save
   //- ADD NEW FOOD MODAL
   b-modal#addNewFoodToMeal(title="Add foods", size="lg", centered, hide-footer)
-    BaseSearchBar(@onSubmit="onSubmitFoodSearch()")
+    SearchBar(@onSubmit="onSubmitFoodSearch()")
     div(v-for="(food, index) in foods", :key="index")
       h4 {{ food.name }}
-      b-table(striped, hover, :items="food.measures", responsive, outlined)
+      b-table(striped, hover, :items="food.measures", responsive, outlined, :fields="['measureName', 'grams', 'carbohydrates', 'protein', 'fat', 'calories', 'quantity', 'add']")
         template(#cell(quantity)="data")
-          b-input(type="number" @input="data.item.value = parseInt($event)" min="1" value="1")
+          b-input(type="number" @input="data.item.value = parseInt($event)" min="1" value="0")
         template(#cell(add)="data")
           b-button(
             @click="addFoodToCreateMeal(data.item)",
@@ -92,7 +95,8 @@ export default {
       foods: [],
       formCreateMeal: {
         name: '',
-        measure: ''
+        measure: '',
+        foods: []
       }
     }
   },
@@ -195,9 +199,11 @@ export default {
     async fetchFoods (search = '', pagination = 1) {
       const response = await this.$usersService.getFoods(search, pagination)
       this.foods = response.data.foods.map((food) => {
-        const { carbohydrates, protein, fat, idFood } = food
+        const { carbohydrates, protein, fat, idFood, name: foodName } = food
         const baseMeasures = {
+          foodName,
           measureName: 'gr',
+          grams: 100,
           idFood,
           carbohydrates,
           protein,
@@ -211,10 +217,12 @@ export default {
 
         if (food.items) {
           food.items.forEach((measure) => {
-            const { measureName, idMeasure } = measure
+            const { measureName, idMeasure, grams } = measure
             let newMeasure = {
+              foodName,
               idMeasure,
               measureName,
+              grams,
               carbohydrates: (food.carbohydrates / 100) * measure.grams,
               protein: (food.protein / 100) * measure.grams,
               fat: (food.fat / 100) * measure.grams
@@ -240,13 +248,31 @@ export default {
         }
         return row
       })
-      console.log(this.foods)
     },
 
     async onSubmitFoodSearch (search) {},
 
     addFoodToCreateMeal (data) {
-      console.log(data)
+      if (!data.value || data.value === 0 || data.value === '') {
+        return this.mixinHandleNotificationErrorNotification('Yo can\'t add "0" of this food')
+      }
+
+      const [row] = [data].map((food) => {
+        const { value, carbohydrates, protein, fat, calories, idFood, idMeasure, foodName } = food
+
+        const returnedItem = {
+          foodName,
+          quantity: value,
+          carbohydrates,
+          protein,
+          fat,
+          calories
+        }
+
+        if (idFood) { return { idFood, ...returnedItem } }
+        return { idMeasure, ...returnedItem }
+      })
+      this.formCreateMeal.foods = [...this.formCreateMeal.foods, row]
     }
   }
 }
