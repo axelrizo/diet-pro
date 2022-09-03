@@ -57,7 +57,7 @@ export default {
 
   methods: {
     onEdit (idMeasure) {
-      this.$emit('onEdit', idMeasure)
+      this.$emit('on-edit', idMeasure)
 
       this.$bvModal.show('createFoodMeasureModal')
     },
@@ -70,7 +70,7 @@ export default {
             throw new Error(response.data.message)
           })
 
-        this.$emit('deleteMeasure')
+        this.$emit('delete-measure')
 
         this.mixinHandleNotificationSuccessNotification(response.message)
       } catch (error) {

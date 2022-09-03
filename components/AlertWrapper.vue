@@ -1,6 +1,6 @@
 <template lang="pug">
 .container-alert(v-show="alerts.length > 0")
-  LayoutAlertContainerAlert(
+  AlertWrapperAlert(
     v-for="(alert, index) in alerts",
     :key="index",
     :alert="alert"

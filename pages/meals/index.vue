@@ -1,7 +1,7 @@
 <template lang="pug">
 b-container
   //- SEARCH-BAR
-  SearchBar(@onSubmit="onSubmitSearch")
+  SearchBar(@on-submit="onSubmitSearch")
   //- CREATE MEAL MODAL
   b-modal#createMealModal(title="New Meal", size="lg", centered, hide-footer)
     b-form.pb-4(@submit.prevent="onSubmit")
@@ -36,7 +36,7 @@ b-container
       b-button.ml-auto.d-block(type="submit", variant="success") Save
   //- ADD NEW FOOD MODAL
   b-modal#addNewFoodToMeal(title="Add foods", size="lg", centered, hide-footer)
-    SearchBar(@onSubmit="onSubmitFoodSearch()")
+    SearchBar(@on-submit="onSubmitFoodSearch()")
     div(v-for="(food, index) in foods", :key="index")
       h4 {{ food.name }}
       b-table(striped, hover, :items="food.measures", responsive, outlined, :fields="['measureName', 'grams', 'carbohydrates', 'protein', 'fat', 'calories', 'quantity', 'add']")
@@ -49,7 +49,7 @@ b-container
           ) add
   b-button.mt-4(v-b-modal.createMealModal, block, size="lg", variant="success") Add new meal
   //- COLLAPSE ELEMENTS
-  BaseIterableCollapse.mt-3(v-for="meal in meals", :key="meal.idMeal")
+  BaseCollapse.mt-3(v-for="meal in meals", :key="meal.idMeal")
     template(#button)
       b-button(block, variant="primary")
         b-row

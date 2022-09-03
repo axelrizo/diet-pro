@@ -1,11 +1,11 @@
 <template lang="pug">
 div.app
-  LayoutAlertContainer
-  LayoutNavbar(v-if="$auth.loggedIn")
+  AlertWrapper
+  TheNavbar(v-if="$auth.loggedIn")
   div(v-else)
-    LayoutLandingNavbar
-    LayoutLogInModal
-    LayoutSignUpModal
+    TheLandingNavbar
+    LogInModal
+    SignUpModal
   Nuxt
 </template>
 

@@ -3,7 +3,7 @@ b-container.index
   b-row.index__hero
     b-col(cols="3" md="6").align-items-center.d-flex
       b-img.hidden.index__principal-image(
-        :src="require('~/components/page/index/assets/landing-image-1.png')"
+        :src="require('~/assets/images/landing-image-1.png')"
       )
     b-col(cols="9" md="6").align-items-center.d-flex
       div
@@ -19,12 +19,12 @@ b-container.index
         h3 If you have tried everything and it has not worked for you.
       b-col(cols="3" md="6")
         b-img.hidden.index__image.index__image--left.position-absolute.ml-lg-5(
-          :src="require('~/components/page/index/assets/landing-image-2.png')"
+          :src="require('~/assets/images/landing-image-2.png')"
         )
     b-row.index__card
       b-col(cols="3" md="6")
         b-img.hidden.index__image.position-absolute.mr-lg-5(
-          :src="require('~/components/page/index/assets/landing-image-3.png')"
+          :src="require('~/assets/images/landing-image-3.png')"
         )
       b-col(cols="9" md="6")
         h3 Anti-diet as a way of life.
@@ -33,12 +33,12 @@ b-container.index
         h3 Add your favorite foods and only worry about the quantities
       b-col(cols="3" md="6")
         b-img.hidden.index__image.index__image--left.position-absolute.ml-lg-5(
-          :src="require('~/components/page/index/assets/landing-image-4.png')"
+          :src="require('~/assets/images/landing-image-4.png')"
         )
   b-container.my-5
     .text-center.d-flex.justify-content-center.mb-4
       b-img.hidden(
-        :src="require('~/components/page/index/assets/landing-image-5.png')"
+        :src="require('~/assets/images/landing-image-5.png')"
       )
     h3.text-center.mb-4 What are you waiting to start
     .text-center

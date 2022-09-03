@@ -115,7 +115,7 @@ export default {
 
   methods: {
     onSubmit () {
-      this.$emit('onSubmitFoodForm', this.food)
+      this.$emit('on-submit', this.food)
     }
   }
 }

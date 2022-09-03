@@ -1,5 +1,6 @@
 <template lang="pug">
-BaseFoodForm(:food="food", @onSubmitFoodForm="onSubmit")
+b-modal#createFoodModal(title="New Food", size="lg", centered, hide-footer)
+  FoodForm(@on-submit="onSubmit", :food-quantity-warning="true")
 </template>
 
 <script>
@@ -8,28 +9,18 @@ import { mixinHandleNotification } from '@/mixins/handleNotification'
 export default {
   mixins: [mixinHandleNotification],
 
-  props: {
-    food: {
-      type: Object,
-      default () {
-        return {}
-      }
-    }
-  },
-
   methods: {
     async onSubmit (form) {
       try {
-        const { name, carbohydrates, protein, fat } = form
-        const formToSend = { name, carbohydrates, protein, fat }
-
         const response = await this.$usersService
-          .updateFood(this.food.idFood, formToSend)
+          .createFood(form)
           .catch(({ response }) => {
             throw new Error(response.data.message)
           })
 
-        this.$emit('fetch')
+        this.$emit('on-submit')
+
+        this.$bvModal.hide('createFoodModal')
 
         this.mixinHandleNotificationSuccessNotification(response.message)
       } catch (error) {

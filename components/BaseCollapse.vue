@@ -1,5 +1,5 @@
 <template lang="pug">
-div.collapse-container
+div.collapse-wrapper
   div(@click="collapseVisible=!collapseVisible")
     slot(name="button")
       b-button( block size="lg" variant="primary") Default button
@@ -19,7 +19,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.collapse-container{
+.collapse-wrapper{
   border: solid 1px gray;
   border-radius: .25rem;
 }

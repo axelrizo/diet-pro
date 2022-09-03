@@ -1,10 +1,10 @@
 <template lang="pug">
 .my-5
   h3 {{ person.name }}
-  PageIndexDashboardPersonCardWeightForm(
-    :idPerson="person.idPerson",
-    :canUpdateItsInfo="person.canUpdateItsInfo",
-    :lastWeight="person.chartData ? person.chartData.data.at(-1) : 0"
+  PersonCardWeightForm(
+    :id-person="person.idPerson",
+    :can-update-its-info="person.canUpdateItsInfo",
+    :last-weight="person.chartData ? person.chartData.data.at(-1) : 0"
     @fetch="$emit('fetch')"
   )
   div(v-if="person.chartData")
@@ -30,15 +30,9 @@ export default {
           idPerson: 0,
           chartData: {
             labels: [
-              'Default',
-              'Default',
-              'Default',
-              'Default',
-              'Default',
-              'Default',
               'Default'
             ],
-            data: [10, 20, 30, 40, 50, 60, 70]
+            data: [10]
           }
         }
       }

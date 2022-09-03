@@ -7,7 +7,7 @@ b-modal#createFoodMeasureModal(
 )
   b-form(@submit.prevent="onSubmit")
     h5 Base measure
-    PageFoodsIdMeasuresTable(:measures="measures")
+    FoodMeasuresTable(:measures="measures")
     //- measure name
     b-form-group(
       label-cols="5",
@@ -181,7 +181,7 @@ export default {
             throw new Error(response.data.message)
           })
 
-        this.$emit('fetchInfo')
+        this.$emit('fetch-info')
 
         this.$bvModal.hide('createFoodMeasureModal')
 
@@ -199,7 +199,7 @@ export default {
             throw new Error(response.data.message)
           })
 
-        this.$emit('fetchInfo')
+        this.$emit('fetch-info')
 
         this.$bvModal.hide('createFoodMeasureModal')
 

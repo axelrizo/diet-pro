@@ -16,7 +16,7 @@ export default {
 
   methods: {
     onSubmit () {
-      this.$emit('onSubmitDates', this.dates)
+      this.$emit('on-submit', this.dates)
     }
   }
 }

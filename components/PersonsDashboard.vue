@@ -1,7 +1,7 @@
 <template lang="pug">
 b-container.pt-5
-  PageIndexDashboardNewPersonModal(@fetch="$fetch")
-  PageIndexDashboardPersonCard(
+  PersonCreateModal(@fetch="$fetch")
+  PersonCard(
     v-for="(person, index) in persons",
     :key="index",
     :person="person",

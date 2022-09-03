@@ -1,5 +1,5 @@
 <template lang="pug">
-BaseIterableCollapse.mt-3
+BaseCollapse.mt-3
   template(#button)
     b-button(block, variant="primary")
       b-row
@@ -69,11 +69,10 @@ export default {
           throw new Error(response.data.message)
         })
 
-        this.$emit('onDelete')
+        this.$emit('on-delete')
 
         this.mixinHandleNotificationSuccessNotification(response.message)
       } catch (error) {
-        console.log(error)
         this.mixinHandleNotificationErrorNotification(error)
       }
     }

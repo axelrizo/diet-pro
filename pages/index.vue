@@ -1,5 +1,5 @@
 <template lang="pug">
 div
-  PageIndexDashboard(v-if="$auth.loggedIn")
-  PageIndexLandingPage(v-else)
+  PersonsDashboard(v-if="$auth.loggedIn")
+  TheLandingPage(v-else)
 </template>
