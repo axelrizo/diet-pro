@@ -1,85 +1,11 @@
 <template lang="pug">
 b-container
-  //- SEARCH-BAR
   SearchBar(@on-submit="onSubmitSearch")
-  //- CREATE MEAL MODAL
-  b-modal#createMealModal(title="New Meal", size="lg", centered, hide-footer)
-    b-form.pb-4(@submit.prevent="onSubmit")
-      //- CREATE MEAL MODAL - name
-      b-form-group(
-        label-cols="5",
-        label-cols-lg="2",
-        label="Name:",
-        label-for="mealName"
-      )
-        b-input-group
-          b-form-input#mealName(v-model="formCreateMeal.name")
-      //- CREATE MEAL MODAL - measure
-      b-form-group(
-        label-cols="5",
-        label-cols-lg="2",
-        label="Measure:",
-        label-for="mealMeasure"
-      )
-        b-input-group
-          b-form-input#mealMeasure(placeholder="Ex: Portion", v-model="formCreateMeal.measure")
-      b-table(striped, hover, :items="formCreateMeal.foods", responsive, outlined, :fields="['foodName', 'quantity', 'carbohydrates', 'protein', 'fat']")
-        template(#cell(quantity)="data")
-          b-input(type="number" v-model="data.item.quantity" min="1")
-      b-button.mt-4(
-        v-b-modal.addNewFoodToMeal,
-        block,
-        size="lg",
-        variant="success",
-        @click="fetchFoods()"
-      ) Add new food
-      b-button.ml-auto.d-block(type="submit", variant="success") Save
-  //- ADD NEW FOOD MODAL
-  b-modal#addNewFoodToMeal(title="Add foods", size="lg", centered, hide-footer)
-    SearchBar(@on-submit="onSubmitFoodSearch()")
-    div(v-for="(food, index) in foods", :key="index")
-      h4 {{ food.name }}
-      b-table(striped, hover, :items="food.measures", responsive, outlined, :fields="['measureName', 'grams', 'carbohydrates', 'protein', 'fat', 'calories', 'quantity', 'add']")
-        template(#cell(quantity)="data")
-          b-input(type="number" @input="data.item.value = parseInt($event)" min="1" value="0")
-        template(#cell(add)="data")
-          b-button(
-            @click="addFoodToCreateMeal(data.item)",
-            variant="success"
-          ) add
+  //- Todo: do foods fetch with (@add-new-food="") in the "FoodsGetModal"
+  MealCreateModal
+  FoodsGetModal
   b-button.mt-4(v-b-modal.createMealModal, block, size="lg", variant="success") Add new meal
-  //- COLLAPSE ELEMENTS
-  BaseCollapse.mt-3(v-for="meal in meals", :key="meal.idMeal")
-    template(#button)
-      b-button(block, variant="primary")
-        b-row
-          b-col.px-1.d-flex.align-items-center.justify-content-center(cols="4") {{ meal.name }}
-          b-col(cols="8")
-            b-row
-              b-col.px-1(cols="3") Carbs
-              b-col.px-1(cols="3") Prot
-              b-col.px-1(cols="3") Fat
-              b-col.px-1(cols="3") Cal
-            b-row
-              b-col.px-1(cols="3") {{ meal.carbohydrates }} #[span.d-none.d-sm-inline gr]
-              b-col.px-1(cols="3") {{ meal.protein }} #[span.d-none.d-sm-inline gr]
-              b-col.px-1(cols="3") {{ meal.fat }} #[span.d-none.d-sm-inline gr]
-              b-col.px-1(cols="3") {{ meal.calories }} #[span.d-none.d-sm-inline kcal]
-    template(#content)
-      b-row.m-2
-        b-col
-          b-table(
-            striped,
-            hover,
-            :items="meal.foodsTable",
-            responsive,
-            outlined
-          )
-      b-row.m-2
-        b-col
-          b-button(block, variant="danger", @click="onDeleteMeal(meal.idMeal)") Delete
-        b-col
-          b-button(block, variant="secondary", :to="`meals/${meal.idMeal}`") Details/Edit
+  MealCollapseDetails(v-for="meal in meals", :key="meal.idMeal")
 </template>
 
 <script>
@@ -92,12 +18,7 @@ export default {
   data () {
     return {
       meals: [],
-      foods: [],
-      formCreateMeal: {
-        name: '',
-        measure: '',
-        foods: []
-      }
+      foods: []
     }
   },
 
@@ -194,60 +115,6 @@ export default {
       } catch (error) {
         this.mixinHandleNotificationErrorNotification(error)
       }
-    },
-
-    async fetchFoods (search = '', pagination = 1) {
-      const response = await this.$usersService.getFoods(search, pagination)
-      this.foods = response.data.foods.map((food) => {
-        const { carbohydrates, protein, fat, idFood, name: foodName } = food
-        const baseMeasures = {
-          foodName,
-          measureName: 'gr',
-          grams: 100,
-          idFood,
-          carbohydrates,
-          protein,
-          fat,
-          calories: calculateCalories(carbohydrates, protein, fat),
-          quantity: '',
-          add: ''
-        }
-
-        let measures = [baseMeasures]
-
-        if (food.items) {
-          food.items.forEach((measure) => {
-            const { measureName, idMeasure, grams } = measure
-            let newMeasure = {
-              foodName,
-              idMeasure,
-              measureName,
-              grams,
-              carbohydrates: (food.carbohydrates / 100) * measure.grams,
-              protein: (food.protein / 100) * measure.grams,
-              fat: (food.fat / 100) * measure.grams
-            }
-            newMeasure = {
-              ...newMeasure,
-              calories: calculateCalories(
-                newMeasure.carbohydrates,
-                newMeasure.protein,
-                newMeasure.fat
-              ),
-              quantity: '',
-              add: ''
-            }
-            measures = [...measures, newMeasure]
-          })
-        }
-
-        const row = {
-          idFood: food.idFood,
-          name: food.name,
-          measures
-        }
-        return row
-      })
     },
 
     async onSubmitFoodSearch (search) {},
