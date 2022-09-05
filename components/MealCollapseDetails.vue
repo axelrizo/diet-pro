@@ -27,17 +27,61 @@ BaseCollapse.mt-3
         )
     b-row.m-2
       b-col
-        b-button(block, variant="danger", @click="onDeleteMeal(meal.idMeal)") Delete
+        b-button(block, variant="danger", @click="onDelete(meal.idMeal)") Delete
       b-col
         b-button(block, variant="secondary", :to="`meals/${meal.idMeal}`") Details/Edit
 </template>
 
 <script>
+import { mixinHandleNotification } from '@/mixins/handleNotification'
+
 export default {
+  mixins: [mixinHandleNotification],
+
   props: {
-    meals: {
-      type: Array,
-      default () { return [] }
+    meal: {
+      type: Object,
+      default () {
+        return {
+          idMeal: 0,
+          name: 'default',
+          carbohydrates: 0,
+          protein: 0,
+          fat: 0,
+          calories: 0,
+          foodsTable: [
+            {
+              foodName: 'default',
+              quantity: 0,
+              measure: 'default',
+              totalGrams: 0,
+              carbohydrates: 0,
+              protein: 0,
+              fat: 0,
+              calories: 0
+            }
+          ],
+          foods: []
+        }
+      }
+    }
+  },
+
+  methods: {
+    async onDelete (id) {
+      try {
+        const response = await this.$mealsService
+          .deleteMeal(id)
+          .catch(({ response }) => {
+            throw new Error(response.data.message)
+          })
+
+        this.$emit('on-delete')
+
+        this.mixinHandleNotificationSuccessNotification(response.message)
+      } catch (error) {
+        this.mixinHandleNotificationErrorNotification(error)
+      }
     }
   }
 }

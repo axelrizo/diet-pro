@@ -1,11 +1,15 @@
 <template lang="pug">
-b-container
+b-container.mt-5
   SearchBar(@on-submit="onSubmitSearch")
-  //- Todo: do foods fetch with (@add-new-food="") in the "FoodsGetModal"
   MealCreateModal
   FoodsGetModal
   b-button.mt-4(v-b-modal.createMealModal, block, size="lg", variant="success") Add new meal
-  MealCollapseDetails(v-for="meal in meals", :key="meal.idMeal")
+  MealCollapseDetails(
+    @on-delete="$fetch",
+    v-for="meal in meals",
+    :key="meal.idMeal",
+    :meal="meal"
+  )
 </template>
 
 <script>
@@ -24,7 +28,6 @@ export default {
 
   async fetch () {
     this.meals = await this.fetchMeals()
-    await this.fetchFoods()
   },
 
   methods: {
@@ -90,7 +93,6 @@ export default {
         })
 
         const calories = calculateCalories(carbohydrates, protein, fat)
-
         return { carbohydrates, protein, fat, calories, foodsTable, ...meal }
       })
 
@@ -101,31 +103,24 @@ export default {
       this.meals = await this.fetchMeals(form.search)
     },
 
-    async onDeleteMeal (id) {
-      try {
-        const response = await this.$mealsService
-          .deleteMeal(id)
-          .catch(({ response }) => {
-            throw new Error(response.data.message)
-          })
-
-        this.$fetch()
-
-        this.mixinHandleNotificationSuccessNotification(response.message)
-      } catch (error) {
-        this.mixinHandleNotificationErrorNotification(error)
-      }
-    },
-
-    async onSubmitFoodSearch (search) {},
-
     addFoodToCreateMeal (data) {
       if (!data.value || data.value === 0 || data.value === '') {
-        return this.mixinHandleNotificationErrorNotification('Yo can\'t add "0" of this food')
+        return this.mixinHandleNotificationErrorNotification(
+          'Yo can\'t add "0" of this food'
+        )
       }
 
       const [row] = [data].map((food) => {
-        const { value, carbohydrates, protein, fat, calories, idFood, idMeasure, foodName } = food
+        const {
+          value,
+          carbohydrates,
+          protein,
+          fat,
+          calories,
+          idFood,
+          idMeasure,
+          foodName
+        } = food
 
         const returnedItem = {
           foodName,
@@ -136,7 +131,9 @@ export default {
           calories
         }
 
-        if (idFood) { return { idFood, ...returnedItem } }
+        if (idFood) {
+          return { idFood, ...returnedItem }
+        }
         return { idMeasure, ...returnedItem }
       })
       this.formCreateMeal.foods = [...this.formCreateMeal.foods, row]
