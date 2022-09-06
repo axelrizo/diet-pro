@@ -1,76 +1,33 @@
 <template lang="pug">
 b-form(@submit.prevent="onSubmit")
   //- name
-  b-form-group(
-    label-cols="5",
-    label-cols-lg="2",
-    label="Name:",
-    label-for="foodName"
-  )
-    b-input-group
-      b-form-input#foodName(v-model="food.name")
+  b-form-group(label-cols="5", label-cols-lg="2", label="Name:")
+    b-form-input(v-model="food.name")
   //- quantity
   b-form-group(
     label-cols="5",
     label-cols-lg="2",
     label="Quantity:",
-    label-for="foodQuantity",
     :description="foodQuantityWarning ? 'After you will add more measures, now we need the base measure (100gr).' : 'Base measure, below you can add new measures'"
   )
     b-input-group(append="gr")
-      b-form-input#foodQuantity(
-        type="number",
-        v-model="quantity",
-        readonly
-      )
+      b-form-input(type="number", v-model="quantity", readonly)
   //- carbohydrates
-  b-form-group(
-    label-cols="5",
-    label-cols-lg="2",
-    label="Carbohydrates:",
-    label-for="foodCarbohydrates"
-  )
+  b-form-group(label-cols="5", label-cols-lg="2", label="Carbohydrates:")
     b-input-group(append="gr")
-      b-form-input#foodCarbohydrates(
-        type="number",
-        step="0.1",
-        v-model="food.carbohydrates"
-      )
+      b-form-input(type="number", step="0.1", v-model="food.carbohydrates")
   //- protein
-  b-form-group(
-    label-cols="5",
-    label-cols-lg="2",
-    label="Protein:",
-    label-for="foodProtein"
-  )
+  b-form-group(label-cols="5", label-cols-lg="2", label="Protein:")
     b-input-group(append="gr")
-      b-form-input#foodProtein(
-        type="number",
-        step="0.1",
-        v-model="food.protein"
-      )
+      b-form-input(type="number", step="0.1", v-model="food.protein")
   //- fat
-  b-form-group(
-    label-cols="5",
-    label-cols-lg="2",
-    label="Fat:",
-    label-for="foodFat"
-  )
+  b-form-group(label-cols="5", label-cols-lg="2", label="Fat:")
     b-input-group(append="gr")
-      b-form-input#foodFat(type="number", step="0.1", v-model="food.fat")
+      b-form-input(type="number", step="0.1", v-model="food.fat")
   //- calories
-  b-form-group(
-    label-cols="5",
-    label-cols-lg="2",
-    label="Calories:",
-    label-for="foodCalories"
-  )
+  b-form-group(label-cols="5", label-cols-lg="2", label="Calories:")
     b-input-group(append="kcal")
-      b-form-input#foodCalories(
-        type="number",
-        v-model="foodCalories",
-        readonly
-      )
+      b-form-input(type="number", v-model="foodCalories", readonly)
   b-button.ml-auto.d-block(type="submit", variant="success") Save
 </template>
 

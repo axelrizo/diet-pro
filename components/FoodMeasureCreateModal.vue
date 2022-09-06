@@ -9,67 +9,28 @@ b-modal#createFoodMeasureModal(
     h5 Base measure
     FoodMeasuresTable(:measures="measures")
     //- measure name
-    b-form-group(
-      label-cols="5",
-      label-cols-lg="2",
-      label="Measure name:",
-      label-for="foodMeasureName"
-    )
-      b-form-input#foodMeasureName(v-model="form.name")
+    b-form-group(label-cols="5", label-cols-lg="2", label="Measure name:")
+      b-form-input(v-model="form.name")
     //- measure quantity
-    b-form-group(
-      label-cols="5",
-      label-cols-lg="2",
-      label="Quantity:",
-      label-for="foodMeasureQuantity"
-    )
+    b-form-group(label-cols="5", label-cols-lg="2", label="Quantity:")
       b-input-group(append="gr")
-        b-form-input#foodMeasureQuantity(v-model="form.quantity")
+        b-form-input(v-model="form.quantity")
     //- measure carbohydrates
-    b-form-group(
-      label-cols="5",
-      label-cols-lg="2",
-      label="Carbohydrates:",
-      label-for="foodMeasureCarbohydrates"
-    )
+    b-form-group(label-cols="5", label-cols-lg="2", label="Carbohydrates:")
       b-input-group(append="gr")
-        b-form-input#foodMeasureCarbohydrates(
-          v-model="computedProperties.carbohydrates",
-          readonly
-        )
+        b-form-input(v-model="computedProperties.carbohydrates", readonly)
     //- measure protein
-    b-form-group(
-      label-cols="5",
-      label-cols-lg="2",
-      label="Protein:",
-      label-for="foodMeasureProtein"
-    )
+    b-form-group(label-cols="5", label-cols-lg="2", label="Protein:")
       b-input-group(append="gr")
-        b-form-input#foodMeasureProtein(
-          v-model="computedProperties.protein",
-          readonly
-        )
+        b-form-input(v-model="computedProperties.protein", readonly)
     //- measure fat
-    b-form-group(
-      label-cols="5",
-      label-cols-lg="2",
-      label="Fat:",
-      label-for="foodMeasureFat"
-    )
+    b-form-group(label-cols="5", label-cols-lg="2", label="Fat:")
       b-input-group(append="gr")
-        b-form-input#foodMeasureFat(v-model="computedProperties.fat", readonly)
+        b-form-input(v-model="computedProperties.fat", readonly)
     //- measure calories
-    b-form-group(
-      label-cols="5",
-      label-cols-lg="2",
-      label="Calories:",
-      label-for="foodMeasureCalories"
-    )
+    b-form-group(label-cols="5", label-cols-lg="2", label="Calories:")
       b-input-group(append="gr")
-        b-form-input#foodMeasureCalories(
-          v-model="computedProperties.calories",
-          readonly
-        )
+        b-form-input(v-model="computedProperties.calories", readonly)
     //- submit button
     b-button.d-block.ml-auto(
       v-if="idMeasure !== 0",
@@ -109,7 +70,9 @@ export default {
 
     measures: {
       type: Array,
-      default () { return [] }
+      default () {
+        return []
+      }
     },
 
     carbohydrates: {

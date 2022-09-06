@@ -1,7 +1,7 @@
 <template lang="pug">
 b-form.mt-4.mb-2(inline, @submit.prevent="onSubmit()")
-  label.mr-sm-2(for="name") Name:
-  b-input#name(type="text", v-model="form.name")
+  label.mr-sm-2 Name:
+    b-input(type="text", v-model="form.name")
   b-button.ml-sm-3.mt-2.mt-sm-0(type="submit") Save
 </template>
 
