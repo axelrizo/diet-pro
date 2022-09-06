@@ -1,6 +1,6 @@
 <template lang="pug">
 b-modal#addNewFoodToMeal(title="Add foods", size="lg", centered, hide-footer)
-  SearchBar(@on-submit="onSubmitFoodSearch()")
+  SearchBar(@on-submit="onSubmitSearch")
   div(v-for="(food, index) in foods", :key="index")
     h3 {{ food.name }}
     b-table(
@@ -9,17 +9,10 @@ b-modal#addNewFoodToMeal(title="Add foods", size="lg", centered, hide-footer)
       :items="food.measures",
       responsive,
       outlined,
-      :fields="['measureName', 'grams', 'carbohydrates', 'protein', 'fat', 'calories', 'quantity', 'add']"
+      :fields="['measureName', 'grams', 'carbohydrates', 'protein', 'fat', 'calories', 'add']"
     )
-      template(#cell(quantity)="data")
-        b-input(
-          type="number",
-          @input="data.item.value = parseInt($event)",
-          min="1",
-          value="0"
-        )
       template(#cell(add)="data")
-        b-button(@click="addFoodToCreateMeal(data.item)", variant="success") add
+        b-button(@click="addFood(data.item)", variant="success") add
 </template>
 
 <script>
@@ -32,12 +25,21 @@ export default {
     }
   },
 
+  async fetch () {
+    await this.fetchFoods()
+  },
+
   methods: {
     async fetchFoods (search = '', pagination = 1) {
       const response = await this.$usersService.getFoods(search, pagination)
+
       this.foods = response.data.foods.map((food) => {
         const { carbohydrates, protein, fat, idFood, name: foodName } = food
+
         const baseMeasures = {
+          data: {
+            idFood
+          },
           foodName,
           measureName: 'gr',
           grams: 100,
@@ -45,9 +47,8 @@ export default {
           carbohydrates,
           protein,
           fat,
-          calories: calculateCalories(carbohydrates, protein, fat),
-          quantity: '',
-          add: ''
+          quantity: 0,
+          calories: calculateCalories(carbohydrates, protein, fat)
         }
 
         let measures = [baseMeasures]
@@ -55,25 +56,31 @@ export default {
         if (food.items) {
           food.items.forEach((measure) => {
             const { measureName, idMeasure, grams } = measure
+
             let newMeasure = {
+              data: {
+                idFood,
+                idMeasure
+              },
               foodName,
               idMeasure,
               measureName,
               grams,
+              quantity: 0,
               carbohydrates: (food.carbohydrates / 100) * measure.grams,
               protein: (food.protein / 100) * measure.grams,
               fat: (food.fat / 100) * measure.grams
             }
+
             newMeasure = {
               ...newMeasure,
               calories: calculateCalories(
                 newMeasure.carbohydrates,
                 newMeasure.protein,
                 newMeasure.fat
-              ),
-              quantity: '',
-              add: ''
+              )
             }
+
             measures = [...measures, newMeasure]
           })
         }
@@ -83,8 +90,17 @@ export default {
           name: food.name,
           measures
         }
+
         return row
       })
+    },
+
+    async onSubmitSearch (form) {
+      await this.fetchFoods(form.search)
+    },
+
+    addFood (food) {
+      this.$emit('add-food', food)
     }
   }
 }

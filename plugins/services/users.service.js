@@ -13,6 +13,12 @@ export default function ($axios, app) {
         { header: { Authorization: app.$auth.strategy.token.get() } }
       )
     },
+    async createMeal (form) {
+      const idUser = app.$auth.user.idUser
+      return await $axios.$post(`/users/${idUser}/meals`, form,
+        { header: { Authorization: app.$auth.strategy.token.get() } }
+      )
+    },
     // read
     async getPersonsWeights (firstDate, secondDate) {
       const idUser = app.$auth.user.idUser

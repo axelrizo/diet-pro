@@ -1,8 +1,8 @@
 <template lang="pug">
 b-container.mt-5
   SearchBar(@on-submit="onSubmitSearch")
-  MealCreateModal
-  FoodsGetModal
+  MealCreateModal(ref="mealCreateModal" @on-submit="$fetch")
+  FoodsGetModal(@add-food="addFoodToMealCreateModal")
   b-button.mt-4(v-b-modal.createMealModal, block, size="lg", variant="success") Add new meal
   MealCollapseDetails(
     @on-delete="$fetch",
@@ -14,11 +14,8 @@ b-container.mt-5
 
 <script>
 import { calculateCalories } from '@/helpers/handleCaloriesCalc'
-import { mixinHandleNotification } from '@/mixins/handleNotification'
 
 export default {
-  mixins: [mixinHandleNotification],
-
   data () {
     return {
       meals: [],
@@ -103,40 +100,8 @@ export default {
       this.meals = await this.fetchMeals(form.search)
     },
 
-    addFoodToCreateMeal (data) {
-      if (!data.value || data.value === 0 || data.value === '') {
-        return this.mixinHandleNotificationErrorNotification(
-          'Yo can\'t add "0" of this food'
-        )
-      }
-
-      const [row] = [data].map((food) => {
-        const {
-          value,
-          carbohydrates,
-          protein,
-          fat,
-          calories,
-          idFood,
-          idMeasure,
-          foodName
-        } = food
-
-        const returnedItem = {
-          foodName,
-          quantity: value,
-          carbohydrates,
-          protein,
-          fat,
-          calories
-        }
-
-        if (idFood) {
-          return { idFood, ...returnedItem }
-        }
-        return { idMeasure, ...returnedItem }
-      })
-      this.formCreateMeal.foods = [...this.formCreateMeal.foods, row]
+    addFoodToMealCreateModal (data) {
+      this.$refs.mealCreateModal.addFood(data)
     }
   }
 }

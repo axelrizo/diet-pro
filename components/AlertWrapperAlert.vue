@@ -3,7 +3,7 @@ b-alert(
   :show="dismissCountDown",
   dismissible,
   :variant="alert.type === 'error' ? 'danger' : 'info'",
-  @dismissed="dismissCountDown = 0",
+  @dismissed="dismissed",
   @dismiss-count-down="countDownChanged"
 ) {{ alert.message }}
 </template>
@@ -44,6 +44,11 @@ export default {
 
     showAlert () {
       this.dismissCountDown = this.dismissSecs
+    },
+
+    dismissed () {
+      this.$store.dispatch('alert/remove', this.alert)
+      this.dismissCountDown = 0
     }
   }
 }
