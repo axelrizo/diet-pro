@@ -1,7 +1,7 @@
 <template lang="pug">
 b-modal#addNewFoodToMeal(title="Add foods", size="lg", centered, hide-footer)
   SearchBar(@on-submit="onSubmitSearch")
-  div(v-for="(food, index) in foods", :key="index")
+  div(v-for="(food, index) in foodsWithPropertyDisabled", :key="index")
     h3 {{ food.name }}
     b-table(
       striped,
@@ -12,13 +12,26 @@ b-modal#addNewFoodToMeal(title="Add foods", size="lg", centered, hide-footer)
       :fields="['measureName', 'grams', 'carbohydrates', 'protein', 'fat', 'calories', 'add']"
     )
       template(#cell(add)="data")
-        b-button(@click="addFood(data.item)", variant="success") add
+        b-button(
+          @click="addFood(data.item)",
+          variant="success",
+          :disabled="data.item.disable"
+        ) add
 </template>
 
 <script>
 import { calculateCalories } from '@/helpers/handleCaloriesCalc'
 
 export default {
+  props: {
+    selectedFoods: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
+
   data () {
     return {
       foods: []
@@ -27,6 +40,25 @@ export default {
 
   async fetch () {
     await this.fetchFoods()
+  },
+
+  computed: {
+    foodsWithPropertyDisabled () {
+      return this.foods.map((food) => {
+        food.measures = food.measures.map((measure) => {
+          const existInSelectedFoods = this.selectedFoods.some(
+            selectedFood => selectedFood.data === measure.data
+          )
+
+          return {
+            ...measure,
+            disable: existInSelectedFoods
+          }
+        })
+
+        return food
+      })
+    }
   },
 
   methods: {

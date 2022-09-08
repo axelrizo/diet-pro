@@ -2,7 +2,6 @@
 b-container.mt-5
   SearchBar(@on-submit="onSubmitSearch")
   MealCreateModal(ref="mealCreateModal" @on-submit="$fetch")
-  FoodsGetModal(@add-food="addFoodToMealCreateModal")
   b-button.mt-4(v-b-modal.createMealModal, block, size="lg", variant="success") Add new meal
   MealCollapseDetails(
     @on-delete="$fetch",
@@ -18,8 +17,7 @@ import { calculateCalories } from '@/helpers/handleCaloriesCalc'
 export default {
   data () {
     return {
-      meals: [],
-      foods: []
+      meals: []
     }
   },
 
@@ -98,10 +96,6 @@ export default {
 
     async onSubmitSearch (form) {
       this.meals = await this.fetchMeals(form.search)
-    },
-
-    addFoodToMealCreateModal (data) {
-      this.$refs.mealCreateModal.addFood(data)
     }
   }
 }
