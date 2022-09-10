@@ -17,7 +17,6 @@ b-modal#addNewFoodToMeal(title="Add foods", size="lg", centered, hide-footer)
           variant="success",
           :disabled="data.item.disable"
         ) add
-        p {{ data }}
 </template>
 
 <script>
