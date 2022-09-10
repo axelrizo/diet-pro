@@ -13,10 +13,11 @@ b-modal#addNewFoodToMeal(title="Add foods", size="lg", centered, hide-footer)
     )
       template(#cell(add)="data")
         b-button(
-          @click="addFood(data.item.measureCopy)",
+          @click="addFood(data.item)",
           variant="success",
           :disabled="data.item.disable"
         ) add
+        p {{ data }}
 </template>
 
 <script>
@@ -46,15 +47,14 @@ export default {
     foodsWithPropertyDisabled () {
       return this.foods
         .map((food) => {
-          food.items = food.items
+          const newItems = food.items
             .map((measure) => {
               return {
-                measureCopy: measure,
                 ...measure,
-                disable: this.selectedFoods.some(someFood => JSON.stringify(someFood) === JSON.stringify(measure.measureCopy))
+                disable: this.selectedFoods.some(someFood => JSON.stringify(someFood) === JSON.stringify(measure))
               }
             })
-          return food
+          return { ...food, items: newItems }
         })
     }
   },
@@ -69,8 +69,19 @@ export default {
       await this.fetchFoods(form.search)
     },
 
-    addFood (food) {
-      this.$emit('add-food', food)
+    addFood (item) {
+      const newItem = { ...item }
+      delete newItem.disable
+      let measureFound = null
+
+      this.foods.forEach((food) => {
+        const selectedItem = food.items
+          .find(measure => JSON.stringify(newItem) === JSON.stringify(measure))
+
+        if (selectedItem !== undefined) { measureFound = selectedItem }
+      })
+
+      this.$emit('add-food', measureFound)
     }
   }
 }
