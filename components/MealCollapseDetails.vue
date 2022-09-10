@@ -4,7 +4,7 @@ BaseCollapse.mt-3
     b-button(block, variant="primary")
       b-row
         b-col.px-1.d-flex.align-items-center.justify-content-center(cols="4") {{ meal.name }}
-        b-col(cols="8")
+        b-col(cols="8", v-if="meal.foods")
           b-row
             b-col.px-1(cols="3") Carbs
             b-col.px-1(cols="3") Prot
@@ -15,13 +15,15 @@ BaseCollapse.mt-3
             b-col.px-1(cols="3") {{ meal.protein }} #[span.d-none.d-sm-inline gr]
             b-col.px-1(cols="3") {{ meal.fat }} #[span.d-none.d-sm-inline gr]
             b-col.px-1(cols="3") {{ meal.calories }} #[span.d-none.d-sm-inline kcal]
+        b-col(cols="8", v-else) Don't have data yet
   template(#content)
     b-row.m-2
       b-col
         b-table(
           striped,
           hover,
-          :items="meal.foodsTable",
+          v-if="meal.foods",
+          :items="foodsTable",
           responsive,
           outlined
         )
@@ -34,6 +36,7 @@ BaseCollapse.mt-3
 
 <script>
 import { mixinHandleNotification } from '@/mixins/handleNotification'
+import { calculateCalories } from '@/helpers/handleCaloriesCalc'
 
 export default {
   mixins: [mixinHandleNotification],
@@ -49,21 +52,38 @@ export default {
           protein: 0,
           fat: 0,
           calories: 0,
-          foodsTable: [
-            {
-              foodName: 'default',
-              quantity: 0,
-              measure: 'default',
-              totalGrams: 0,
-              carbohydrates: 0,
-              protein: 0,
-              fat: 0,
-              calories: 0
-            }
-          ],
           foods: []
         }
       }
+    }
+  },
+
+  computed: {
+    foodsTable () {
+      if (!this.meal.foods) { return null }
+      return this.meal.foods.map((food) => {
+        const BASE_MEASURE = 'gr'
+
+        let row = {
+          foodName: food.name,
+          quantity: food.quantity,
+          measure: food.measure ? food.measure.name : BASE_MEASURE,
+          totalGrams: food.measure
+            ? food.measure.quantity * food.quantity
+            : food.quantity
+        }
+        row = {
+          ...row,
+          carbohydrates: (food.carbohydrates / 100) * row.totalGrams,
+          protein: (food.protein / 100) * row.totalGrams,
+          fat: (food.fat / 100) * row.totalGrams
+        }
+        row = {
+          ...row,
+          calories: calculateCalories(row.carbohydrates, row.protein, row.fat)
+        }
+        return row
+      })
     }
   },
 

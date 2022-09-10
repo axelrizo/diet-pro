@@ -20,20 +20,33 @@ b-form.pb-4(@submit.prevent="$emit('on-submit', form)")
     v-b-modal.addNewFoodToMeal,
     block,
     size="lg",
-    variant="success",
+    variant="primary",
     @click="$emit('add-meal')"
-  ) Add new meal
+  ) Add new food
   slot
 </template>
 
 <script>
 export default {
+  props: {
+    meal: {
+      type: Object,
+      default () {
+        return {
+          name: '',
+          measure: '',
+          foods: []
+        }
+      }
+    }
+  },
+
   data () {
     return {
       form: {
-        name: '',
-        measure: '',
-        foods: []
+        name: this.meal.name,
+        measure: this.meal.measure,
+        foods: this.meal.foods
       }
     }
   },

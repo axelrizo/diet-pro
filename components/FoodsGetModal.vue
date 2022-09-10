@@ -6,21 +6,21 @@ b-modal#addNewFoodToMeal(title="Add foods", size="lg", centered, hide-footer)
     b-table(
       striped,
       hover,
-      :items="food.measures",
+      :items="food.items",
       responsive,
       outlined,
-      :fields="['measureName', 'grams', 'carbohydrates', 'protein', 'fat', 'calories', 'add']"
+      :fields="['measureName', 'quantity', 'carbohydrates', 'protein', 'fat', 'calories', 'add']"
     )
       template(#cell(add)="data")
         b-button(
-          @click="addFood(data.item)",
+          @click="addFood(data.item.measureCopy)",
           variant="success",
           :disabled="data.item.disable"
         ) add
 </template>
 
 <script>
-import { calculateCalories } from '@/helpers/handleCaloriesCalc'
+import { handleFoodArrays } from '@/helpers/handleArrays'
 
 export default {
   props: {
@@ -39,92 +39,30 @@ export default {
   },
 
   async fetch () {
-    await this.fetchFoods()
+    this.foods = await this.fetchFoods()
   },
 
   computed: {
     foodsWithPropertyDisabled () {
-      return this.foods.map((food) => {
-        food.measures = food.measures.map((measure) => {
-          const existInSelectedFoods = this.selectedFoods.some(
-            selectedFood => selectedFood.data === measure.data
-          )
-
-          return {
-            ...measure,
-            disable: existInSelectedFoods
-          }
+      return this.foods
+        .map((food) => {
+          food.items = food.items
+            .map((measure) => {
+              return {
+                measureCopy: measure,
+                ...measure,
+                disable: this.selectedFoods.some(someFood => JSON.stringify(someFood) === JSON.stringify(measure.measureCopy))
+              }
+            })
+          return food
         })
-
-        return food
-      })
     }
   },
 
   methods: {
     async fetchFoods (search = '', pagination = 1) {
       const response = await this.$usersService.getFoods(search, pagination)
-
-      this.foods = response.data.foods.map((food) => {
-        const { carbohydrates, protein, fat, idFood, name: foodName } = food
-
-        const baseMeasures = {
-          data: {
-            idFood
-          },
-          foodName,
-          measureName: 'gr',
-          grams: 100,
-          idFood,
-          carbohydrates,
-          protein,
-          fat,
-          quantity: 0,
-          calories: calculateCalories(carbohydrates, protein, fat)
-        }
-
-        let measures = [baseMeasures]
-
-        if (food.items) {
-          food.items.forEach((measure) => {
-            const { measureName, idMeasure, grams } = measure
-
-            let newMeasure = {
-              data: {
-                idFood,
-                idMeasure
-              },
-              foodName,
-              idMeasure,
-              measureName,
-              grams,
-              quantity: 0,
-              carbohydrates: (food.carbohydrates / 100) * measure.grams,
-              protein: (food.protein / 100) * measure.grams,
-              fat: (food.fat / 100) * measure.grams
-            }
-
-            newMeasure = {
-              ...newMeasure,
-              calories: calculateCalories(
-                newMeasure.carbohydrates,
-                newMeasure.protein,
-                newMeasure.fat
-              )
-            }
-
-            measures = [...measures, newMeasure]
-          })
-        }
-
-        const row = {
-          idFood: food.idFood,
-          name: food.name,
-          measures
-        }
-
-        return row
-      })
+      return handleFoodArrays(response.data.foods)
     },
 
     async onSubmitSearch (form) {

@@ -64,6 +64,14 @@ export default function ($axios, app) {
         }
       )
     },
+    async getMeal (idMeal) {
+      const idUser = app.$auth.user.idUser
+      return await $axios.$get(`/users/${idUser}/meals/${idMeal}`,
+        {
+          headers: { Authorization: app.$auth.strategy.token.get() }
+        }
+      )
+    },
     // update
     async updatePersonName (idPerson, form) {
       const idUser = app.$auth.user.idUser
@@ -74,6 +82,12 @@ export default function ($axios, app) {
     async updateFood (idFood, form) {
       const idUser = app.$auth.user.idUser
       return await $axios.$put(`users/${idUser}/foods/${idFood}`, form,
+        { headers: { Authorization: app.$auth.strategy.token.get() } }
+      )
+    },
+    async updateMeal (idMeal, form) {
+      const idUser = app.$auth.user.idUser
+      return await $axios.$put(`users/${idUser}/foods/${idMeal}`, form,
         { headers: { Authorization: app.$auth.strategy.token.get() } }
       )
     }

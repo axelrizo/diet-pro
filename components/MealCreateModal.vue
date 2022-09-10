@@ -1,7 +1,12 @@
 <template lang="pug">
 b-modal#createMealModal(title="New Meal", size="lg", centered, hide-footer)
   MealDetailForm(@on-submit="onSubmit")
-    b-button.ml-auto.d-block(type="submit", variant="success") Save
+    b-button.ml-auto.d-block(
+      type="submit",
+      variant="success",
+      block,
+      size="lg"
+    ) Save
 </template>
 
 <script>
