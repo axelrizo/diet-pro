@@ -25,7 +25,7 @@ b-table-simple(v-if="foods.length > 0", striped, hover, responsive, outlined)
       b-td.font-weight-bold {{ computedMacrosTotals.carbohydrates }}
       b-td.font-weight-bold {{ computedMacrosTotals.protein }}
       b-td.font-weight-bold {{ computedMacrosTotals.fat }}
-      b-td(colspan="2").font-weight-bold {{ computedMacrosTotals.calories }}
+      b-td.font-weight-bold(colspan="2") {{ computedMacrosTotals.calories }}
 </template>
 
 <script>
@@ -36,23 +36,7 @@ export default {
     foods: {
       type: Array,
       default () {
-        return [
-          {
-            idFood: 0,
-            idMeasure: 0,
-            foodName: '',
-            grams: 0,
-            carbohydrates: '',
-            protein: 0,
-            fat: 0,
-            measureName: '',
-            calories: 0,
-            data: {
-              idMeasure: 0,
-              idFood: 0
-            }
-          }
-        ]
+        return []
       }
     }
   },
@@ -76,7 +60,7 @@ export default {
           measureName
         }
 
-        if (food.idFood) {
+        if (food.idFood && !food.idMeasure) {
           newFood.grams = (grams / 100) * quantity
           newFood.carbohydrates = ((carbohydrates / 100) * quantity).toFixed()
           newFood.protein = ((protein / 100) * quantity).toFixed()

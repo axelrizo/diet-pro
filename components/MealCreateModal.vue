@@ -23,8 +23,8 @@ export default {
           measure,
           foods: foods.map((food) => {
             return {
-              idFood: food.data.idFood,
-              idMeasure: food.data.idMeasure || null,
+              idFood: food.idFood,
+              idMeasure: food.idMeasure || null,
               quantity: parseInt(food.quantity)
             }
           })

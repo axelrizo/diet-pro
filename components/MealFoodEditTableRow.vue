@@ -31,8 +31,7 @@ export default {
           carbohydrates: '',
           protein: 0,
           fat: 0,
-          calories: 0,
-          quantity: 0
+          calories: 0
         }
       }
     }

@@ -9,7 +9,7 @@ b-modal#addNewFoodToMeal(title="Add foods", size="lg", centered, hide-footer)
       :items="food.items",
       responsive,
       outlined,
-      :fields="['measureName', 'quantity', 'carbohydrates', 'protein', 'fat', 'calories', 'add']"
+      :fields="['quantity', 'measureName', 'grams', 'carbohydrates', 'protein', 'fat', 'calories', 'add']"
     )
       template(#cell(add)="data")
         b-button(
@@ -44,17 +44,17 @@ export default {
 
   computed: {
     foodsWithPropertyDisabled () {
-      return this.foods
-        .map((food) => {
-          const newItems = food.items
-            .map((measure) => {
-              return {
-                ...measure,
-                disable: this.selectedFoods.some(someFood => JSON.stringify(someFood) === JSON.stringify(measure))
-              }
-            })
-          return { ...food, items: newItems }
+      return this.foods.map((food) => {
+        const newItems = food.items.map((measure) => {
+          return {
+            ...measure,
+            disable: this.selectedFoods.some(
+              someFood => JSON.stringify(someFood) === JSON.stringify(measure)
+            )
+          }
         })
+        return { ...food, items: newItems }
+      })
     }
   },
 
@@ -75,9 +75,15 @@ export default {
 
       this.foods.forEach((food) => {
         const selectedItem = food.items
-          .find(measure => JSON.stringify(newItem) === JSON.stringify(measure))
+          .find(({ idMeasure, idFood }) => {
+            if (newItem.idMeasure) { return newItem.idMeasure === idMeasure }
+            return newItem.idFood === idFood
+          })
 
-        if (selectedItem !== undefined) { measureFound = selectedItem }
+        if (selectedItem !== undefined) {
+          selectedItem.foodName = food.name
+          measureFound = selectedItem
+        }
       })
 
       this.$emit('add-food', measureFound)
