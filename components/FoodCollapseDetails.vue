@@ -3,9 +3,7 @@ BaseCollapse.mt-3
   template(#button)
     b-button(block, variant="primary")
       b-row
-        b-col.px-1.d-flex.align-items-center.justify-content-center(
-          cols="4"
-        ) {{ food.name }}
+        b-col.px-1.d-flex.align-items-center.justify-content-center(cols="4") {{ food.name }}
         b-col(cols="8")
           b-row
             b-col.px-1(cols="3") Carbs
@@ -13,19 +11,22 @@ BaseCollapse.mt-3
             b-col.px-1(cols="3") Fat
             b-col.px-1(cols="3") Cal
           b-row
-            b-col.px-1(cols="3") {{food.carbohydrates}}#[span.d-none.d-sm-inline gr]
-            b-col.px-1(cols="3") {{food.protein}}#[span.d-none.d-sm-inline gr]
-            b-col.px-1(cols="3") {{food.fat}}#[span.d-none.d-sm-inline gr]
-            b-col.px-1(cols="3") {{food.calories}}#[span.d-none.d-sm-inline kcal]
+            b-col.px-1(cols="3") {{ food.carbohydrates }}#[span.d-none.d-sm-inline gr]
+            b-col.px-1(cols="3") {{ food.protein }}#[span.d-none.d-sm-inline gr]
+            b-col.px-1(cols="3") {{ food.fat }}#[span.d-none.d-sm-inline gr]
+            b-col.px-1(cols="3") {{ food.calories }}#[span.d-none.d-sm-inline kcal]
   template(#content)
     b-row.m-2
       b-col
-        b-table(striped, hover, :items="food.items", responsive, outlined)
+        FoodMeasuresTable(
+          :measures="food.items",
+          :fields="['quantity',{key:'name', label:'Measure Name'}, 'grams', 'carbohydrates', 'protein', 'fat', 'calories']"
+        )
     b-row.m-2
       b-col
-        b-button(block, variant="danger" @click="onDelete()") Delete
+        b-button(block, variant="danger", @click="onDelete()") Delete
       b-col
-        b-button(block, variant="secondary" :to="`foods/${food.idFood}`") Details/Edit
+        b-button(block, variant="secondary", :to="`foods/${food.idFood}`") Details/Edit
 </template>
 
 <script>
@@ -38,26 +39,7 @@ export default {
     food: {
       type: Object,
       default () {
-        return {
-          name: 'Apple',
-          carbohydrates: 50,
-          protein: 50,
-          fat: 50,
-          calories: 1000,
-          idFood: 15,
-          items: [
-            {
-              quantity: 100,
-              idMeasure: 0,
-              measureName: 'gr',
-              grams: 100,
-              carbohydrates: 100,
-              protein: 95,
-              fat: 15,
-              calories: 1000
-            }
-          ]
-        }
+        return {}
       }
     }
   },
@@ -65,9 +47,11 @@ export default {
   methods: {
     async onDelete () {
       try {
-        const response = await this.$foodsService.deleteFood(this.food.idFood).catch(({ response }) => {
-          throw new Error(response.data.message)
-        })
+        const response = await this.$foodsService
+          .deleteFood(this.food.idFood)
+          .catch(({ response }) => {
+            throw new Error(response.data.message)
+          })
 
         this.$emit('on-delete')
 

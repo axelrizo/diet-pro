@@ -16,7 +16,7 @@ b-container.py-5
     :measures="food.items",
     @delete-measure="$fetch",
     @on-edit="setIdMeasure",
-    :actions="true"
+    :fields="['quantity',{key:'name', label:'Measure Name'}, 'grams', 'carbohydrates', 'protein', 'fat', 'calories', 'edit', 'remove']"
   )
   b-button.mt-4(
     variant="success",

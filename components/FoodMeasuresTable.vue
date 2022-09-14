@@ -1,15 +1,15 @@
 <template lang="pug">
-b-table(striped, hover, outlined, :items="formattedArray", responsive)
+b-table(striped, hover, outlined, :items="measures", responsive, :fields="fields")
   template(#cell(edit)="data")
     b-button(
-      v-if="data.item.idMeasure !== undefined",
+      v-if="data.item.idMeasure !== null",
       variant="secondary",
       @click="onEdit(data.item.idMeasure)"
     )
       i.fa-solid.fa-pen
-  template(#cell(erase)="data")
+  template(#cell(remove)="data")
     b-button(
-      v-if="data.item.idMeasure !== undefined",
+      v-if="data.item.idMeasure !== null",
       variant="danger",
       @click="onDelete(data.item.idMeasure)"
     )
@@ -22,36 +22,14 @@ export default {
   mixins: [mixinHandleNotification],
 
   props: {
-    actions: {
-      type: Boolean,
-      default: false
+    fields: {
+      type: Array,
+      default () { return [] }
     },
 
     measures: {
       type: Array,
-      default () {
-        return [
-          {
-            quantity: 100,
-            idMeasure: 0,
-            measureName: 'gr',
-            grams: 100,
-            carbohydrates: 100,
-            protein: 95,
-            fat: 15,
-            calories: 1000
-          }
-        ]
-      }
-    }
-  },
-
-  computed: {
-    formattedArray () {
-      if (this.actions !== true) { return this.measures }
-      return this.measures.map((food) => {
-        return { ...food, erase: '', edit: '' }
-      })
+      default () { return [] }
     }
   },
 
