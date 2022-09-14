@@ -1,8 +1,8 @@
 <template lang="pug">
-b-form(@submit.prevent="onSubmit")
+b-form(@submit.prevent="$emit('on-submit', form)")
   //- name
   b-form-group(label-cols="5", label-cols-lg="2", label="Name:")
-    b-form-input(v-model="food.name")
+    b-form-input(v-model="form.name")
   //- quantity
   b-form-group(
     label-cols="5",
@@ -11,24 +11,24 @@ b-form(@submit.prevent="onSubmit")
     :description="foodQuantityWarning ? 'After you will add more measures, now we need the base measure (100gr).' : 'Base measure, below you can add new measures'"
   )
     b-input-group(append="gr")
-      b-form-input(type="number", v-model="quantity", readonly)
+      b-form-input(type="number", value="100", readonly)
   //- carbohydrates
   b-form-group(label-cols="5", label-cols-lg="2", label="Carbohydrates:")
     b-input-group(append="gr")
-      b-form-input(type="number", step="0.1", v-model="food.carbohydrates")
+      b-form-input(type="number", step="0.1", v-model="form.carbohydrates")
   //- protein
   b-form-group(label-cols="5", label-cols-lg="2", label="Protein:")
     b-input-group(append="gr")
-      b-form-input(type="number", step="0.1", v-model="food.protein")
+      b-form-input(type="number", step="0.1", v-model="form.protein")
   //- fat
   b-form-group(label-cols="5", label-cols-lg="2", label="Fat:")
     b-input-group(append="gr")
-      b-form-input(type="number", step="0.1", v-model="food.fat")
+      b-form-input(type="number", step="0.1", v-model="form.fat")
   //- calories
   b-form-group(label-cols="5", label-cols-lg="2", label="Calories:")
     b-input-group(append="kcal")
-      b-form-input(type="number", v-model="foodCalories", readonly)
-  b-button.ml-auto.d-block(type="submit", variant="success") Save
+      b-form-input(type="number", :value="foodCalories", readonly)
+  slot
 </template>
 
 <script>
@@ -38,14 +38,7 @@ export default {
   props: {
     food: {
       type: Object,
-      default () {
-        return {
-          name: '',
-          carbohydrates: 0,
-          protein: 0,
-          fat: 0
-        }
-      }
+      default () { return {} }
     },
 
     foodQuantityWarning: {
@@ -56,23 +49,34 @@ export default {
 
   data () {
     return {
-      quantity: 100
+      form: {
+        name: this.food.name,
+        carbohydrates: this.food.nutritionalInformation.carbohydrates,
+        protein: this.food.nutritionalInformation.protein,
+        fat: this.food.nutritionalInformation.fat
+      }
     }
   },
 
   computed: {
     foodCalories () {
       return calculateCalories(
-        this.food.carbohydrates,
-        this.food.protein,
-        this.food.fat
+        this.form.carbohydrates,
+        this.form.protein,
+        this.form.fat
       )
     }
   },
 
-  methods: {
-    onSubmit () {
-      this.$emit('on-submit', this.food)
+  watch: {
+    food: {
+      deep: true,
+      handler (newValue) {
+        this.form.name = newValue.name
+        this.form.carbohydrates = newValue.nutritionalInformation.carbohydrates
+        this.form.protein = newValue.nutritionalInformation.protein
+        this.form.fat = newValue.nutritionalInformation.fat
+      }
     }
   }
 }

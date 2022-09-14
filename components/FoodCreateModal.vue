@@ -1,6 +1,7 @@
 <template lang="pug">
 b-modal#createFoodModal(title="New Food", size="lg", centered, hide-footer)
   FoodForm(@on-submit="onSubmit", :food-quantity-warning="true")
+    b-button.ml-auto.d-block(type="submit", variant="success") Save
 </template>
 
 <script>
