@@ -19,7 +19,7 @@ BaseCollapse.mt-3
     b-row.m-2
       b-col
         FoodMeasuresTable(
-          :measures="computedMeasures",
+          :items="computedMeasures",
           :fields="['quantity', { key: 'name', label: 'Measure Name' }, 'grams', 'carbohydrates', 'protein', 'fat', 'calories']"
         )
     b-row.m-2

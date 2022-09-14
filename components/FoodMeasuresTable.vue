@@ -1,19 +1,27 @@
 <template lang="pug">
-b-table(striped, hover, outlined, :items="measures", responsive, :fields="fields")
-  template(#cell(edit)="data")
-    b-button(
-      v-if="data.item.idMeasure !== null",
-      variant="secondary",
-      @click="onEdit(data.item.idMeasure)"
-    )
-      i.fa-solid.fa-pen
-  template(#cell(remove)="data")
-    b-button(
-      v-if="data.item.idMeasure !== null",
-      variant="danger",
-      @click="onDelete(data.item.idMeasure)"
-    )
-      i.fa-solid.fa-trash
+div
+  b-table(
+    :items="items",
+    :fields="fields",
+    striped,
+    hover,
+    outlined,
+    responsive
+  )
+    template(#cell(edit)="data")
+      b-button(
+        v-if="data.item.id !== null",
+        variant="secondary",
+        @click="$emit('on-edit-measure', data.item.id)"
+      )
+        i.fa-solid.fa-pen
+    template(#cell(remove)="data")
+      b-button(
+        v-if="data.item.id !== null",
+        variant="danger",
+        @click="$emit('on-delete-measure', data.item.id)"
+      )
+        i.fa-solid.fa-trash
 </template>
 
 <script>
@@ -22,37 +30,17 @@ export default {
   mixins: [mixinHandleNotification],
 
   props: {
+    items: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+
     fields: {
       type: Array,
-      default () { return [] }
-    },
-
-    measures: {
-      type: Array,
-      default () { return [] }
-    }
-  },
-
-  methods: {
-    onEdit (idMeasure) {
-      this.$emit('on-edit', idMeasure)
-
-      this.$bvModal.show('createFoodMeasureModal')
-    },
-
-    async onDelete (idMeasure) {
-      try {
-        const response = await this.$foodsService
-          .deleteFoodMeasure(idMeasure)
-          .catch(({ response }) => {
-            throw new Error(response.data.message)
-          })
-
-        this.$emit('delete-measure')
-
-        this.mixinHandleNotificationSuccessNotification(response.message)
-      } catch (error) {
-        this.mixinHandleNotificationErrorNotification(error)
+      default () {
+        return []
       }
     }
   }
