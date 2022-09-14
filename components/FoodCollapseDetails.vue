@@ -11,16 +11,16 @@ BaseCollapse.mt-3
             b-col.px-1(cols="3") Fat
             b-col.px-1(cols="3") Cal
           b-row
-            b-col.px-1(cols="3") {{ food.carbohydrates }}#[span.d-none.d-sm-inline gr]
-            b-col.px-1(cols="3") {{ food.protein }}#[span.d-none.d-sm-inline gr]
-            b-col.px-1(cols="3") {{ food.fat }}#[span.d-none.d-sm-inline gr]
-            b-col.px-1(cols="3") {{ food.calories }}#[span.d-none.d-sm-inline kcal]
+            b-col.px-1(cols="3") {{ food.nutritionalInformation.carbohydrates }}#[span.d-none.d-sm-inline gr]
+            b-col.px-1(cols="3") {{ food.nutritionalInformation.protein }}#[span.d-none.d-sm-inline gr]
+            b-col.px-1(cols="3") {{ food.nutritionalInformation.fat }}#[span.d-none.d-sm-inline gr]
+            b-col.px-1(cols="3") {{ computedCalories }}#[span.d-none.d-sm-inline kcal]
   template(#content)
     b-row.m-2
       b-col
         FoodMeasuresTable(
-          :measures="food.items",
-          :fields="['quantity',{key:'name', label:'Measure Name'}, 'grams', 'carbohydrates', 'protein', 'fat', 'calories']"
+          :measures="computedMeasures",
+          :fields="['quantity', { key: 'name', label: 'Measure Name' }, 'grams', 'carbohydrates', 'protein', 'fat', 'calories']"
         )
     b-row.m-2
       b-col
@@ -31,6 +31,7 @@ BaseCollapse.mt-3
 
 <script>
 import { mixinHandleNotification } from '@/mixins/handleNotification'
+import { calculateCalories } from '@/helpers/handleCaloriesCalc'
 
 export default {
   mixins: [mixinHandleNotification],
@@ -44,11 +45,33 @@ export default {
     }
   },
 
+  computed: {
+    computedCalories () {
+      return calculateCalories(
+        this.food.nutritionalInformation.carbohydrates,
+        this.food.nutritionalInformation.protein,
+        this.food.nutritionalInformation.fat
+      )
+    },
+
+    computedMeasures () {
+      const returnedArray = this.food.measures
+        .map((measure) => {
+          const carbohydrates = (this.food.nutritionalInformation.carbohydrates / 100) * measure.grams
+          const protein = (this.food.nutritionalInformation.protein / 100) * measure.grams
+          const fat = (this.food.nutritionalInformation.fat / 100) * measure.grams
+          const calories = calculateCalories(carbohydrates, protein, fat)
+          return { ...measure, carbohydrates, protein, fat, calories }
+        })
+      return returnedArray
+    }
+  },
+
   methods: {
     async onDelete () {
       try {
         const response = await this.$foodsService
-          .deleteFood(this.food.idFood)
+          .deleteFood(this.food.id)
           .catch(({ response }) => {
             throw new Error(response.data.message)
           })
