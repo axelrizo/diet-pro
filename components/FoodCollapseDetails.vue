@@ -26,7 +26,7 @@ BaseCollapse.mt-3
       b-col
         b-button(block, variant="danger", @click="onDelete()") Delete
       b-col
-        b-button(block, variant="secondary", :to="`foods/${food.idFood}`") Details/Edit
+        b-button(block, variant="secondary", :to="`foods/${food.id}`") Details/Edit
 </template>
 
 <script>
