@@ -51,7 +51,7 @@ export default {
           protein,
           fat,
           foodName,
-          measureName
+          name: measureName
         } = food
 
         const newFood = {

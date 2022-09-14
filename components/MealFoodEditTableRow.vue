@@ -25,14 +25,7 @@ export default {
     food: {
       type: Object,
       default () {
-        return {
-          foodName: '',
-          grams: 0,
-          carbohydrates: '',
-          protein: 0,
-          fat: 0,
-          calories: 0
-        }
+        return {}
       }
     }
   }

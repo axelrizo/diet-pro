@@ -9,7 +9,7 @@ b-modal#addNewFoodToMeal(title="Add foods", size="lg", centered, hide-footer)
       :items="food.items",
       responsive,
       outlined,
-      :fields="['quantity', 'measureName', 'grams', 'carbohydrates', 'protein', 'fat', 'calories', 'add']"
+      :fields="['quantity', { key:'name', label:'Measure Name' }, 'grams', 'carbohydrates', 'protein', 'fat', 'calories', 'add']"
     )
       template(#cell(add)="data")
         b-button(
@@ -48,9 +48,7 @@ export default {
         const newItems = food.items.map((measure) => {
           return {
             ...measure,
-            disable: this.selectedFoods.some(
-              someFood => JSON.stringify(someFood) === JSON.stringify(measure)
-            )
+            disable: this.selectedFoods.some(someFood => someFood.idFood === measure.idFood)
           }
         })
         return { ...food, items: newItems }
@@ -65,7 +63,7 @@ export default {
     },
 
     async onSubmitSearch (form) {
-      await this.fetchFoods(form.search)
+      this.foods = await this.fetchFoods(form.search)
     },
 
     addFood (item) {
